@@ -1,0 +1,31 @@
+{% extends 'base.html'%}
+{% block content %}
+
+    <p>Here, the user chooses the desired restaurant, date, and time.</p>
+
+    <h1>Create Your Event</h1>
+
+    <h3>2) Choose restaurant, date, and time:</h3>
+
+    <form action="/confirmation">
+        <div>
+            <label>
+                {% for business in businesses%}
+                    <input type="radio" name="business_info" value="{{business.name}}" required>{{business.name}} -  Overall Ratings: {{business.rating}}  ||  Reviews: {{business.review_count}}  ||  Address: {{business.location["display_address"]}}<br>
+                {% endfor %}
+            </label>
+        </div>
+        <br>
+        <div>
+            <label>
+
+            </label>
+        </div>
+        <br>
+        <div>
+            <input type="submit" value="Create my event!">
+        </div>
+    </form>
+
+
+{% endblock %}

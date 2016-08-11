@@ -1,0 +1,52 @@
+{% extends 'base.html'%}
+{% block content %}
+
+    <p>Here, the user makes their queries for restaurants.</p>
+
+    <h1>Create Your Event</h1>
+
+    <h3>1) Find a Restaurant:</h3>
+    <form action="/restaurant_query" method="POST">
+        <div>    
+            <label>City:
+                <select name="city">
+                    <option value="san_francisco">San Francisco</option>
+                    <option value="daly_city">Daly City</option>
+                    <option value="new_york">New York</option>
+                    <option value="los_angeles">Los Angeles</option>
+                    <option value="las_vegas">Las Vegas</option>
+                    <option value="chicago">Chicago</option>
+                    <option value="miami">Miami</option>
+                    <option value="paris">Paris</option>
+                </select>
+            </label>
+        </div>
+        <p>AND/OR</p>
+        <div>
+            <label>Zipcode: (Note: If your zipcode doesn't match your city, zipcode will have higher priority.)
+                <input type:"text" name="zipcode">
+            </label>
+        </div>
+        <br>
+        <div>
+            <label>Category:
+                <select name="term"> 
+                {% for category in categories %}
+                    <option value="{{category.food_type}}">{{ category.food_type }}</option>
+                {% endfor %}
+                </select>
+            </label>
+        </div>
+        <br>
+        <div>
+            <label>Radius (max 40000 meters): (NEED TO CONVERT THIS TO 25 MILES MAX)
+                <input type:"text" name="distance">
+            </label>
+        </div>
+        <br>
+        <div>
+            <input type="submit" value="Search Restaurants">
+        </div>
+    </form>
+
+{% endblock %}

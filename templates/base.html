@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Food App</title>
+</head>
+<body>
+
+Food Adventures |
+
+{% if "id" in session %}
+    <a href="/">Home</a> |
+    <a href="/profile/{{ session['id'] }}">Your Profile</a> |
+    <a href="/create_event">Create Events</a> |
+    <a href="/upcoming_events">Upcoming Events</a> |
+    <a href="/logout">Logout</a>
+{% else %}
+    <a href="/login">Login</a> |
+    <a href="/signup">Sign Up</a>
+{% endif %}
+
+<hr>
+
+{% for flash in get_flashed_messages() %}
+    {{ flash }}
+{% endfor %}
+
+{% block content %}
+    DON'T FORGET TO PUT THE BODY!!!!
+{% endblock %}
+
+</body>
+</html>

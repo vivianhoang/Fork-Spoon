@@ -52,33 +52,32 @@ class Event(db.Model):
 
     __tablename__ = "events"
 
-    event_id = db.Column(db.Integer, autoincrement=True,
-                         primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True,
+                   primary_key=True)
     time_range = db.Column(db.DateTime, nullable=False)  # if not this, make 2 columns: start/end
-    location_radius_search = db.Column(db.Integer, nullable=True)
-    category_id = db.Column(db.Integer, db.ForeignKey("categories.category_id"))
-    business_id = db.Column(db.Integer, db.ForeignKey("businesses.business_id"))
-    initial_location_search = db.Column(db.String(10), nullable=True)  # zipcode
+    # location_radius_search = db.Column(db.Integer, nullable=True)
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
+    business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"))
+    # initial_location_search = db.Column(db.String(10), nullable=True)  # zipcode
 
     business = db.relationship("Business",
                                backref=db.backref("events",
-                                                  order_by=event_id))
+                                                  order_by=id))
 
     category = db.relationship("Category",
                                backref=db.backref("events",
-                                                  order_by=event_id))
+                                                  order_by=id))
 
     # backref is a simple way to also declare a new property on the Event class. You can then also use my_event.person (my_event is a pre-created query) to get to the person at that event.
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event event_id=%s user_id=%s time_range=%s isMatched=%s>" % (self.event_id,
+        return "<Event event_id=%s user_id=%s time_range=%s isMatched=%s>" % (self.id,
                                                                               self.time_range,
-                                                                              self.location_radius_search,
-                                                                              self.category_id,
-                                                                              self.business_id,
-                                                                              self.initial_location_search)
+                                                                              self.categories_id,
+                                                                              self.business_id)
+                                                                              #  self.initial_location_search # self.location_radius_search,
 
 
 class Attendee(db.Model):
@@ -86,24 +85,25 @@ class Attendee(db.Model):
 
     __tablename__ = "attendees"
 
-    attendees_id = db.Column(db.Integer, autoincrement=True,
-                             primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True,
+                   primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    event_id = db.Column(db.Integer, db.ForeignKey("events.event_id"))
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
     is_owner = db.Column(db.Boolean, default=True)
 
     user = db.relationship("User",
                            backref=db.backref("attendees",
-                                              order_by=attendees_id))
+                                              order_by=id))
 
     event = db.relationship("Event",
                             backref=db.backref("attendees",
-                                               order_by=attendees_id))
+                                               order_by=id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event user_id=%s event_id=%s is_owner=%s>" % (self.user_id,
+        return "<Event user_id=%s event_id=%s is_owner=%s>" % (self.id,
+                                                               self.user_id,
                                                                self.event_id,
                                                                self.is_owner)
 
@@ -113,8 +113,8 @@ class Business(db.Model):
 
     __tablename__ = "businesses"
 
-    business_id = db.Column(db.Integer, autoincrement=True,
-                            primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True,
+                   primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     location = db.Column(db.String(64), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
@@ -126,7 +126,7 @@ class Business(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event business_id=%s name=%s location=%s rating=%s review_count=%s url=%s>" % (self.business_id,
+        return "<Event business_id=%s name=%s location=%s rating=%s review_count=%s url=%s>" % (self.id,
                                                                                                 self.name,
                                                                                                 self.location,
                                                                                                 self.rating,
@@ -139,14 +139,14 @@ class Category(db.Model):
 
     __tablename__ = "categories"
 
-    category_id = db.Column(db.Integer, autoincrement=True,
-                            primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True,
+                   primary_key=True)
     food_type = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event category_id=%s food_type=%s>" % (self.category_id,
+        return "<Event category_id=%s food_type=%s>" % (self.id,
                                                         self.food_type)
 
 ################################################################################

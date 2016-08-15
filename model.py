@@ -20,8 +20,8 @@ class User(db.Model):
     email = db.Column(db.String(60), unique=True, nullable=False)
     zipcode = db.Column(db.String(15), nullable=False)
     password = db.Column(db.String(64), nullable=False)
-    yelp_token = db.Column(db.String(200))
-    yelp_token_secret = db.Column(db.String(200))
+    # yelp_token = db.Column(db.String(200))
+    # yelp_token_secret = db.Column(db.String(200))
 
     #hard code tokens into database
     # make buttons to log in as user A or user B on homepage
@@ -42,9 +42,9 @@ class User(db.Model):
                                                                   self.last_name,
                                                                   self.email,
                                                                   self.zipcode,
-                                                                  self.password,
-                                                                  self.yelp_token,
-                                                                  self.yelp_token_secret)
+                                                                  self.password)
+                                                                  # self.yelp_token,
+                                                                  # self.yelp_token_secret)
 
 
 class Event(db.Model):
@@ -54,11 +54,12 @@ class Event(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True,
                    primary_key=True)
-    time_range = db.Column(db.DateTime, nullable=False)  # if not this, make 2 columns: start/end
-    # location_radius_search = db.Column(db.Integer, nullable=True)
+    start_time = db.Column(db.DateTime, nullable=False)  # if not this, make 2 columns: start/end
+    end_time = db.Column(db.DateTime, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"))
     # initial_location_search = db.Column(db.String(10), nullable=True)  # zipcode
+    # location_radius_search = db.Column(db.Integer, nullable=True)
 
     business = db.relationship("Business",
                                backref=db.backref("events",
@@ -113,8 +114,7 @@ class Business(db.Model):
 
     __tablename__ = "businesses"
 
-    id = db.Column(db.Integer, autoincrement=True,
-                   primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)  # autoincrement=true
     name = db.Column(db.String(64), nullable=False)
     location = db.Column(db.String(64), nullable=False)
     rating = db.Column(db.Integer, nullable=False)

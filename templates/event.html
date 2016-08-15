@@ -33,6 +33,8 @@
                 <select name="term"> 
                 {% for category in categories %}
                     <option value="{{category.food_type}}">{{ category.food_type }}</option>
+
+
                 {% endfor %}
                 </select>
             </label>
@@ -45,8 +47,9 @@
         </div>
         <br>
         <div>
-            <input type="submit" value="Search Restaurants">
+            <input type="submit" value="Submit My Event">
         </div>
+
     </form>
 
 {% endblock %}

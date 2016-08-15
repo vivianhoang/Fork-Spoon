@@ -1,3 +1,5 @@
+# WHEN I STILL HAD THE CREATE EVENT AS TWO SEPARATE PAGES
+
 """Connecting Solo Eaters"""
 
 from jinja2 import StrictUndefined
@@ -7,6 +9,7 @@ from datetime import datetime
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
 from model import connect_to_db, db, User, Event, Attendee, Business, Category
+import random
 import os
 
 auth = Oauth1Authenticator(
@@ -104,8 +107,6 @@ def signup_processed():
                         email=email,
                         zipcode=zipcode,
                         password=password)
-                        # yelp_token="",
-                        # yelp_token_secret="")
 
     db.session.add(new_user)
 
@@ -174,6 +175,14 @@ def restaurants():
     results = client.search(location, **params)
 
     businesses = results.businesses
+    category = Category.query.filter_by(food_type=term).first()
+    category_id = category.id
+    print category_id
+
+    # if there are no matches, create event and popup/route to notifications. If there is, route to
+    # confirmation page. Must write a conditional query checking time and date, so I might have to
+    #move the date/time request form onto this restaurant_query route first
+    # random_business = random.choice(businesses)
 
     times = ["00:00", "00:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30",
              "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30",
@@ -181,35 +190,59 @@ def restaurants():
              "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18.30",
              "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"]
 
-    return render_template("restaurants.html", businesses=businesses, times=times)
+    return render_template("restaurants.html", businesses=businesses, times=times, category_id=category_id)
 
 
 @app.route("/confirmation", methods=["POST"])
 def event_confirmed():
     """Confirmation page after creating an event."""
 
-    date = request.form('date')
-    start_time = request.form('start_time')
-    end_time = request.form('end_time')
+        # instantiating event and business into our tables
 
-    start_datetime = datetime.strptime(date, start_time, "%d-%b-%Y")
-    end_datetime = datetime.striptime(date, end_time, "%d-%b-%Y")
+        # grabbing the date and time
+    date = request.form['date']
+    start_time = request.form['start_time']
+    end_time = request.form['end_time']
+    date_start_time = date + " " + start_time
+    date_end_time = date + " " + end_time
 
-    business_name = request.form('business_name')
-    business_address = request.form('business_address')
-    business_rating = request.form('business_rating')
-    business_review_count = request.form('business_review_count')
-    business_url = request.form('business_url')
-    #instantiate event and business
+    #     # stripping the date in proper datetime format
+    start_datetime = datetime.strptime(date_start_time, "%m/%d/%Y %H:%M")
+    end_datetime = datetime.strptime(date_end_time, "%m/%d/%Y %H:%M")
 
-    event = Event()
-    business = Business()
+    print end_datetime
 
-    db.session.add_all(event, business)  # add all
+    #     # grabbing business info in preparation to instantiate
+    business_id = request.form['business_id']
+    print business_id
+    business_name = request.form['business_name']
+    business_address = request.form['business_address']
+    business_rating = request.form['business_rating']
+    business_review_count = request.form['business_review_count']
+    business_url = request.form['business_url']
+
+
+    #     # getting category id
+    category_id = request.form['category_id']
+    #     #instantiate event and business
+
+    #     # instantiating event
+    event = Event(start_time=start_datetime, end_time=end_datetime, category_id=category_id, business_id=business_id)
+
+    #     # checking to see if business is not there and instantiating a new business
+    #     # If the business is already in DB we only instantiate the event
+    business = Business.query.get(id)
+
+    if not business:
+        new_business = Business(id=business_id, name=business_name, location=business_address, rating=business_rating, review_count=business_review_count, url=business_url)
+
+        db.session.add(new_business)
+
+    db.session.add(event)
 
     db.session.commit()
 
-    return render_template("confirmation.html")
+    return render_template("confirmation.html", start_datetime=start_datetime, business_name=business_name)
 
 
 if __name__ == "__main__":

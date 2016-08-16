@@ -58,6 +58,7 @@ class Event(db.Model):
     end_time = db.Column(db.DateTime, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"))
+    is_matched = db.Column(db.Boolean, nullable=False, default=False)
     # initial_location_search = db.Column(db.String(10), nullable=True)  # zipcode
     # location_radius_search = db.Column(db.Integer, nullable=True)
 
@@ -114,7 +115,7 @@ class Business(db.Model):
 
     __tablename__ = "businesses"
 
-    id = db.Column(db.Integer, primary_key=True)  # autoincrement=true
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     location = db.Column(db.String(64), nullable=False)
     rating = db.Column(db.Integer, nullable=False)

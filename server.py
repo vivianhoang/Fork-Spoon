@@ -1,5 +1,3 @@
-# WHEN I STILL HAD THE CREATE EVENT AS TWO SEPARATE PAGES
-
 """Connecting Solo Eaters"""
 
 from jinja2 import StrictUndefined
@@ -9,7 +7,6 @@ from datetime import datetime
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
 from model import connect_to_db, db, User, Event, Attendee, Business, Category
-import random
 import os
 
 auth = Oauth1Authenticator(
@@ -203,41 +200,38 @@ def event_confirmed():
     start_datetime = datetime.strptime(date_start_time, "%m/%d/%Y %H:%M")
     end_datetime = datetime.strptime(date_end_time, "%m/%d/%Y %H:%M")
 
-    print end_datetime
-
     # instantiating business
-    business = request.form['business']
-    # print business
-    # print type(business)
-    business_name = business.name
-    # print business_name
-    business_address = ', '.join(business.location.display_address)
-    business_rating = business.rating
-    business_review_count = business.review_count
-    business_url = business.url
+    business_name = request.form['business_name']
+    business_address = request.form['business_location']
+    business_rating = request.form['business_rating']
+    business_review_count = request.form['business_review_count']
+    business_url = request.form['business_url']
 
-    # new_business = Business(name=business_name, location=business_address, rating=business_rating, review_count=business_review_count, url=business_url)
-
-    # db.session.add(new_business)
-
-    # db.session.commit()
-
-    # # getting category id
-    # category_id = request.form['category_id']
-    # business = Business.query.filter_by(name=business_name).first()
-    # business_id = business.id
-
-    # # instantiating event
-    # event = Event(start_time=start_datetime, end_time=end_datetime, category_id=category_id, business_id=business_id)
-
-    # db.session.add(event)
-
-    # db.session.commit
+    business = Business.query.filter_by(url=business_url)
 
     # checking to see if business is not there and instantiating a new business
     # If the business is already in DB we only instantiate the event
 
-    return render_template("confirmation.html")  # start_datetime=start_datetime, business_name=business_name
+    if not business:
+        new_business = Business(name=business_name, location=business_address, rating=business_rating, review_count=business_review_count, url=business_url)
+
+        db.session.add(new_business)
+
+        db.session.commit()
+
+    # getting category id and business id to pass into event
+    category_id = request.form['category_id']
+    business = Business.query.filter_by(name=business_name).first()
+    business_id = business.id
+
+    # instantiating event
+    event = Event(start_time=start_datetime, end_time=end_datetime, category_id=category_id, business_id=business_id)
+
+    db.session.add(event)
+
+    db.session.commit()
+
+    return render_template("confirmation.html", start_datetime=start_datetime, business_name=business_name)
 
 
 @app.route("/upcoming_events", methods=['GET'])
@@ -253,9 +247,9 @@ def upcomming_events():
 @app.route("/find_events", methods=['GET'])
 def available_events():
 
-    # event = Event.query.filter_by(is_matched=False)
+    events = Event.query.filter_by(is_matched=False)
 
-    return render_template("available_events.html")  # event=event
+    return render_template("available_events.html", events=events)
 
 
 @app.route("/matched", methods=['POST'])
@@ -263,6 +257,8 @@ def matched_event():
 
     # change event is_matched to true
     # instantiate attendees
+        # attendee = Attendee(user_id=user_id, event_id=event_id, is_owner= 'currently defaulted to true')
+    # need to figure out a way where I can't choose my own event creation
 
     return redirect("upcoming_events")
 

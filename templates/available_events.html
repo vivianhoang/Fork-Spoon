@@ -3,6 +3,18 @@
 
 <p>This is my event page with all available events that haven't been matched with someone yet. Use submit button or create radio buttons for each. Instantiate Attendees and change "is matched" in Event to True</p>
 
+    <form action="/matched", method="POST">
+        <div>
+            <label>
+                {% for event in events%}
+                    <input type="radio" name="unmatched_event" value="{{event.id}}" required>{{event.business.name}} | {{event.start_time}} to {{event.end_time}}"<br>
 
+                {% endfor %}
+            </label>
+        </div>
+        <div>
+            <input type="submit" value="I want to join this event!">
+        </div>
+    </form>
 
 {% endblock %}

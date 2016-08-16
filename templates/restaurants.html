@@ -13,7 +13,11 @@
         <div>
             <label>
                 {% for business in businesses%}
-                    <input type="radio" name="business" value="{{business}}" required>{{business.name}} -  Overall Ratings: {{business.rating}}  ||  <a href="{{business.url}}">Reviews:</a> {{business.review_count}}  ||  Address: {{', '.join(business.location.display_address)}}<br>
+                    <input type="radio" name="business_url" value="{{business.url}}" required>{{business.name}} -  Overall Ratings: {{business.rating}}  ||  <a href="{{business.url}}">Reviews:</a> {{business.review_count}}  ||  Address: {{', '.join(business.location.display_address)}}<br>
+                    <input type="hidden" name ="business_name" value="{{business.name}}">
+                    <input type="hidden" name ="business_rating" value="{{business.rating}}">
+                    <input type="hidden" name ="business_location" value="{{', '.join(business.location.display_address)}}">
+                    <input type="hidden" name ="business_review_count" value="{{business.review_count}}">
                 {% endfor %}
             </label>
         </div>

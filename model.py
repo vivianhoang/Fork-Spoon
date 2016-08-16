@@ -118,7 +118,7 @@ class Business(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     location = db.Column(db.String(64), nullable=False)
-    rating = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Float, nullable=False)
     review_count = db.Column(db.Integer, nullable=True)
     url = db.Column(db.String(200), nullable=True)
     # latitude

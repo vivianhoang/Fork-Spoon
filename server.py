@@ -251,7 +251,7 @@ def upcomming_events():
 
     # for a in previous_events:
     #     if a.is_matched == True:
-    #         my_previous_events.append(a)
+    #         my_previous_events.append(a)  # if the event is matched, show in previous events. If not, don't include.
 
     return render_template("upcoming_events.html", unmatched_events=unmatched_events, my_matched_events=my_matched_events, previous_events=previous_events, time_now=time_now)
 

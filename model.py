@@ -20,24 +20,14 @@ class User(db.Model):
     email = db.Column(db.String(60), unique=True, nullable=False)
     zipcode = db.Column(db.String(15), nullable=False)
     password = db.Column(db.String(64), nullable=False)
-    # yelp_token = db.Column(db.String(200))
-    # yelp_token_secret = db.Column(db.String(200))
 
-    #hard code tokens into database
     # make buttons to log in as user A or user B on homepage
     # location 127.0.0.1 /login/1 , and do for login 2
-
-    # create events - post - add to database
-    # query information from yelp first, (this is creating a json file which has all response data when a user is searching for a restaurant, so all data is saved locally) and user picks from that query, then it gets saved. The form has to have our categories already
-    # form, route, post:
-        # input, dropdown, time
-        # input, dropdown, location
-        # submit (THIS CREATES THE EVENTS TABLE) - ATTENDEES TABLE SHOWS THE MATCH. WE MATCH WITH EVENT ID
 
     def __repr__(self):
         """Provides helpful representation when printed."""
 
-        return "<User user_id=%s name=%s email=%s zipcode=%s>" % (self.id,
+        return "<User id=%s name=%s email=%s zipcode=%s>" % (self.id,
                                                                   self.first_name,
                                                                   self.last_name,
                                                                   self.email,
@@ -59,8 +49,7 @@ class Event(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"))
     is_matched = db.Column(db.Boolean, nullable=False, default=False)
-    # initial_location_search = db.Column(db.String(10), nullable=True)  # zipcode
-    # location_radius_search = db.Column(db.Integer, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     business = db.relationship("Business",
                                backref=db.backref("events",
@@ -70,16 +59,22 @@ class Event(db.Model):
                                backref=db.backref("events",
                                                   order_by=id))
 
+    user = db.relationship("User",
+                           backref=db.backref("events",
+                                              order_by=id))
+
     # backref is a simple way to also declare a new property on the Event class. You can then also use my_event.person (my_event is a pre-created query) to get to the person at that event.
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event event_id=%s user_id=%s time_range=%s isMatched=%s>" % (self.id,
-                                                                              self.time_range,
-                                                                              self.categories_id,
-                                                                              self.business_id)
-                                                                              #  self.initial_location_search # self.location_radius_search,
+        return "<Event id=%s start_time=%s end_time=%s category_id=%s business_id=%s is_matched=%s user_id=%s>" % (self.id,
+                                                                                                                   self.start_time,
+                                                                                                                   self.end_time,
+                                                                                                                   self.category_id,
+                                                                                                                   self.business_id,
+                                                                                                                   self.is_matched,
+                                                                                                                   self.user_id)
 
 
 class Attendee(db.Model):
@@ -104,7 +99,7 @@ class Attendee(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event user_id=%s event_id=%s is_owner=%s>" % (self.id,
+        return "<Event id=%s user_id=%s event_id=%s is_owner=%s>" % (self.id,
                                                                self.user_id,
                                                                self.event_id,
                                                                self.is_owner)
@@ -116,18 +111,18 @@ class Business(db.Model):
     __tablename__ = "businesses"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    location = db.Column(db.String(64), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    location = db.Column(db.String(500), nullable=False)
     rating = db.Column(db.Float, nullable=False)
     review_count = db.Column(db.Integer, nullable=True)
-    url = db.Column(db.String(200), nullable=True)
+    url = db.Column(db.String(1000), nullable=True)
     # latitude
     # longitude
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event business_id=%s name=%s location=%s rating=%s review_count=%s url=%s>" % (self.id,
+        return "<Event id=%s name=%s location=%s rating=%s review_count=%s url=%s>" % (self.id,
                                                                                                 self.name,
                                                                                                 self.location,
                                                                                                 self.rating,
@@ -147,8 +142,24 @@ class Category(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event category_id=%s food_type=%s>" % (self.id,
-                                                        self.food_type)
+        return "<Event id=%s food_type=%s>" % (self.id,
+                                               self.food_type)
+
+
+class City(db.Model):
+    """City locations user can search for."""
+
+    __tablename__ = "cities"
+
+    id = db.Column(db.Integer, autoincrement=True,
+                   primary_key=True)
+    city_name = db.Column(db.String(64), nullable=False)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Event id=%s city=%s>" % (self.id,
+                                          self.city_name)
 
 ################################################################################
 

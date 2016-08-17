@@ -7,13 +7,17 @@
         <div>
             <label>
                 {% for event in events%}
-                    <input type="radio" name="unmatched_event" value="{{event.id}}" required>{{event.business.name}} | {{event.start_time}} to {{event.end_time}}"<br>
+                    <input type="radio" name="event_id" value="{{event.id}}" required><a href={{event.business.url}}>{{event.business.name}} </a>| {{event.start_time.strftime("%b %m, %Y")}} from {{event.start_time.strftime("%H:%M")}} - {{event.end_time.strftime("%H:%M")}} | {{event.user.first_name}}<br>
 
                 {% endfor %}
             </label>
         </div>
         <div>
-            <input type="submit" value="I want to join this event!">
+            {% if events %}
+                <input type="submit" value="I want to join this event!">
+            {% else %}
+                <p>Oops! There are currently no events available :'(</p>
+            {% endif %}
         </div>
     </form>
 

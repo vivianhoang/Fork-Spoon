@@ -1,23 +1,16 @@
 {% extends 'base.html'%}
 {% block content %}
 
-    <p>Here, the user makes their queries for restaurants.</p>
-
     <h1>Create Your Event</h1>
 
-    <h3>1) Find a Restaurant:</h3>
+    <h3>1) Find a Place:</h3>
     <form action="/restaurant_query" method="POST">
         <div>    
             <label>City:
                 <select name="city">
-                    <option value="san_francisco">San Francisco</option>
-                    <option value="daly_city">Daly City</option>
-                    <option value="new_york">New York</option>
-                    <option value="los_angeles">Los Angeles</option>
-                    <option value="las_vegas">Las Vegas</option>
-                    <option value="chicago">Chicago</option>
-                    <option value="miami">Miami</option>
-                    <option value="paris">Paris</option>
+                {% for city in cities %}
+                    <option value="{{city.city_name}}">{{ city.city_name }}</option>
+                {% endfor %}
                 </select>
             </label>
         </div>
@@ -33,8 +26,6 @@
                 <select name="term"> 
                 {% for category in categories %}
                     <option value="{{category.food_type}}">{{ category.food_type }}</option>
-
-
                 {% endfor %}
                 </select>
             </label>

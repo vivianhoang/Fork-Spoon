@@ -1,7 +1,7 @@
 {% extends 'base.html'%}
 {% block content %}
 
-<p>Thanks for creating an event! Your event is set for {{start_datetime}} at {{business_name}}.</p>
+<p>Thanks for creating an event! Your event is set for {{event.start_time.strftime("%b %d, %Y")}} from {{event.start_time.strftime("%H:%M")}} - {{event.end_time.strftime("%H:%M")}} at {{event.business.name}}.</p>
 
 
 {% endblock %}

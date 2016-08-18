@@ -27,6 +27,16 @@ app.secret_key = "ABC"  # change this
 app.jinja_env.undefined = StrictUndefined
 
 
+def miles_to_meters(mile):
+    """Converts miles input to meters."""
+
+    mile = float(mile)
+    meter_conversion = 0.00062137
+    meters = mile / meter_conversion
+
+    return meters
+
+
 @app.route('/')
 def index():
     """Welcome Page."""
@@ -78,7 +88,6 @@ def signup_processed():
     first_name = request.form["first_name"]
     last_name = request.form["last_name"]
     email = request.form["email"]
-    zipcode = request.form["zipcode"]
     password = request.form["password"]
 
     # checking to see if the email already exists in the db. If not, a new account is created.
@@ -91,7 +100,6 @@ def signup_processed():
         new_user = User(first_name=first_name,
                         last_name=last_name,
                         email=email,
-                        zipcode=zipcode,
                         password=password)
 
     db.session.add(new_user)
@@ -124,7 +132,7 @@ def profile(id):
 
 
 @app.route("/create_event")
-def event_page():
+def make_search():
     """Displays event creation page and forms to query through Yelp restaurants."""
 
     categories = Category.query.all()
@@ -134,7 +142,7 @@ def event_page():
 
 
 @app.route("/restaurant_query", methods=['POST'])
-def restaurants():
+def complete_event():
     """Displays restaurants to choose from."""
 
     city = request.form['city']
@@ -142,20 +150,27 @@ def restaurants():
     term = request.form['term']
     radius_filter = request.form['distance']
 
-    # taking into account both city and zipcode from search
     location = (city + " " + zipcode)
 
     params = {
         'term': term,
-        'radius_filter': radius_filter,
+        'radius_filter': miles_to_meters(radius_filter),
         'sort': 0
     }
 
     results = client.search(location, **params)
 
+    # instantiating new businesses that we find.
     businesses = results.businesses
     category = Category.query.filter_by(food_type=term).first()
     category_id = category.id
+
+    for business in businesses:
+        find_business = Business.query.filter_by(url=business.url, name=business.name).first()
+        if not find_business:
+            new_business = Business(name=business.name, location=', '.join(business.location.display_address), rating=business.rating, review_count=business.review_count, url=business.url)
+            db.session.add(new_business)
+            db.session.commit()
 
     times = ["00:00", "00:30", "1:00", "1:30", "2:00", "2:30", "3:00", "3:30", "4:00", "4:30",
              "5:00", "5:30", "6:00", "6:30", "7:00", "7:30", "8:00", "8:30", "9:00", "9:30",
@@ -170,7 +185,7 @@ def restaurants():
 def event_confirmed():
     """Confirmation page after creating an event."""
 
-    # instantiating event, business, and single attendees into our tables
+    # instantiating event and single attendees into our tables
 
     date = request.form['date']
     start_time = request.form['start_time']
@@ -181,28 +196,11 @@ def event_confirmed():
     start_datetime = datetime.strptime(date_start_time, "%m/%d/%Y %H:%M")
     end_datetime = datetime.strptime(date_end_time, "%m/%d/%Y %H:%M")
 
-    # convert time to local UTC
-
-    business_name = request.form['business_name']
-    business_address = request.form['business_location']
-    business_rating = request.form['business_rating']
-    business_review_count = request.form['business_review_count']
     business_url = request.form['business_url']
-
     business = Business.query.filter_by(url=business_url).first()
 
-    # checking to see if business is not there and instantiating a new business
-    # If the business is already in DB we only instantiate the event
-
-    if not business:
-        new_business = Business(name=business_name, location=business_address, rating=business_rating, review_count=business_review_count, url=business_url)
-
-        db.session.add(new_business)
-        db.session.commit()
-
-    # getting category id and business id to pass into event
+    # getting category id and business id to instantiate event
     category_id = request.form['category_id']
-    business = Business.query.filter_by(name=business_name).first()
     business_id = business.id
 
     user = User.query.filter_by(id=session['id']).first()
@@ -225,19 +223,19 @@ def event_confirmed():
 
 @app.route("/upcoming_events", methods=['GET'])
 def upcomming_events():
-    """Displays events user has created and matched with"""
+    """Displays events user has matched with and/or created"""
 
     pacific = timezone('US/Pacific')
     time_now = datetime.now(tz=pacific)
 
     # looking for all unmatched events that haven't passed their date
     user = User.query.filter_by(id=session['id']).first()
-    unmatched_events = Event.query.filter(Event.is_matched == False, Event.user_id == user.id, Event.end_time > time_now).all()  # Event.end_time > time_now
+    unmatched_events = Event.query.filter(Event.is_matched == False, Event.user_id == user.id, Event.end_time > time_now).all()
 
-    # checking all events the user is planning to go to
     matched_event = Attendee.query.filter_by(user_id=user.id).all()
 
     # checking to see if the event is matched with someone else. If so, it is an UPCOMMING event
+    # this can be written better
     my_matched_events = []
     for a in matched_event:
         if a.event.is_matched == True:
@@ -245,13 +243,6 @@ def upcomming_events():
 
     # grabs all previous events, both matched and unmatched
     previous_events = Event.query.filter(Event.user_id == user.id, Event.end_time < time_now).all()
-    # previous_events = db.session.query(Attendee).join(Attendee.event).filter(Attendee.user_id == user.id, Event.end_time < time_now).all()
-
-    # my_previous_events = []
-
-    # for a in previous_events:
-    #     if a.is_matched == True:
-    #         my_previous_events.append(a)  # if the event is matched, show in previous events. If not, don't include.
 
     return render_template("upcoming_events.html", unmatched_events=unmatched_events, my_matched_events=my_matched_events, previous_events=previous_events, time_now=time_now)
 
@@ -263,20 +254,19 @@ def available_events():
     pacific = timezone('US/Pacific')
     time_now = datetime.now(tz=pacific)
 
-    # DEAL WITH TIME
     user = User.query.filter_by(id=session['id']).first()
-    events = Event.query.filter(Event.is_matched == False, Event.user_id != user.id, Event.end_time > time_now).all()
+
     # The past is less than the present/now, so we want to show all events where the future is greater than the present/now
+    events = Event.query.filter(Event.is_matched == False, Event.user_id != user.id, Event.end_time > time_now).all()
 
     return render_template("available_events.html", events=events)
 
 
 @app.route("/matched", methods=['POST'])
 def matched_event():
-    """Instantiating attendees after a user selects an event."""
+    """Instantiating attendees after a user selects an event and matches with someone."""
 
     event_id = request.form['event_id']
-    # updates is_matched to true so it won't show up on the /find_events page anymore.
     Event.query.filter_by(id=event_id).update({"is_matched": True})
 
     db.session.commit()
@@ -302,5 +292,5 @@ if __name__ == "__main__":
 
     #DebugToolbarExtension(app)
 
-    # Since we ran on vagrant, we need to put host equal to 0.0.0.0
+    # Since we run on vagrant, we need to put host equal to 0.0.0.0
     app.run(host="0.0.0.0")

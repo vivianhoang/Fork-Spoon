@@ -1,6 +1,10 @@
+Alemeda
 Antioch
+Atherton
 Belmont
 Berkeley
+Burlingame
+Colma
 Campbell
 Concord
 Cupertino
@@ -14,17 +18,21 @@ Fairfield
 Foster City
 Fremont
 Gilroy
+Half Moon Bay
 Hayward
 Hillsborough
 Lafayette
 Livermore
+Los Altos
+Los Gatos
 Martinez
 Menlo Park
+Mill Valley
+Millbrae
 Milpitas
 Morgan Hill
 Mountain View
-Los Altos
-Los Gatos
+Novato
 Oakland
 Orinda
 Pacifica
@@ -32,11 +40,15 @@ Palo Alto
 Petaluma
 Pittsburg
 Pleasanton
+Portola Valley
 Redwood City
 Richmond
+San Bruno
+San Carlos
 San Francisco
 San Jose
 San Leandro
+San Mateo
 San Pablo
 San Rafael
 San Ramon
@@ -48,3 +60,8 @@ Union City
 Vacaville
 Vallejo
 Walnut Creek
+Woodside
+Santa Clara
+Suisun City
+Rohnert Park
+Sonoma

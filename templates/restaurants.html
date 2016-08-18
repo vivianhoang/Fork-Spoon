@@ -3,18 +3,18 @@
 
     <h1>Create Your Event</h1>
 
-    <h3>2) Choose place, date, and time:</h3>
+    <h3>2) Choose a place, date, and time:</h3>
 
     <form action="/confirmation", method="POST">
         <div>
             <label>
-                {% for business in businesses%}
-                    <input type="radio" name="business_url" value="{{business.url}}" required><a href="{{business.url}}">{{business.name}}</a> -  Ratings: {{business.rating}}  || Reviews: {{business.review_count}}  ||  {{', '.join(business.location.display_address)}}<br>
-                    <input type="hidden" name ="business_name" value="{{business.name}}">
-                    <input type="hidden" name ="business_rating" value="{{business.rating}}">
-                    <input type="hidden" name ="business_location" value="{{', '.join(business.location.display_address)}}">
-                    <input type="hidden" name ="business_review_count" value="{{business.review_count}}">
-                {% endfor %}
+                    {% for business in businesses%}
+                        <input type="radio" name="business_url" value="{{business.url}}" required><a href="{{business.url}}">{{business.name}}</a> -  Ratings: {{business.rating}}  || Reviews: {{business.review_count}}  ||  {{', '.join(business.location.display_address)}}<br>
+                        {# <input type="hidden" name ="business_name" value="{{business.name}}">
+                        <input type="hidden" name ="business_rating" value="{{business.rating}}">
+                        <input type="hidden" name ="business_location" value="{{', '.join(business.location.display_address)}}">
+                        <input type="hidden" name ="business_review_count" value="{{business.review_count}}"> #}
+                    {% endfor %}
             </label>
         </div>
         <div>

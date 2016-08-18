@@ -18,7 +18,6 @@ class User(db.Model):
     first_name = db.Column(db.String(60), nullable=False)
     last_name = db.Column(db.String(60), nullable=False)
     email = db.Column(db.String(60), unique=True, nullable=False)
-    zipcode = db.Column(db.String(15), nullable=False)
     password = db.Column(db.String(64), nullable=False)
 
     # make buttons to log in as user A or user B on homepage
@@ -27,14 +26,11 @@ class User(db.Model):
     def __repr__(self):
         """Provides helpful representation when printed."""
 
-        return "<User id=%s name=%s email=%s zipcode=%s>" % (self.id,
-                                                                  self.first_name,
-                                                                  self.last_name,
-                                                                  self.email,
-                                                                  self.zipcode,
-                                                                  self.password)
-                                                                  # self.yelp_token,
-                                                                  # self.yelp_token_secret)
+        return "<User id=%s name=%s email=%s>" % (self.id,
+                                                  self.first_name,
+                                                  self.last_name,
+                                                  self.email,
+                                                  self.password)
 
 
 class Event(db.Model):
@@ -44,24 +40,18 @@ class Event(db.Model):
 
     id = db.Column(db.Integer, autoincrement=True,
                    primary_key=True)
-    start_time = db.Column(db.DateTime, nullable=False)  # if not this, make 2 columns: start/end
+    start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"))
     is_matched = db.Column(db.Boolean, nullable=False, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
-    business = db.relationship("Business",
-                               backref=db.backref("events",
-                                                  order_by=id))
+    business = db.relationship("Business", backref=db.backref("events", order_by=id))
 
-    category = db.relationship("Category",
-                               backref=db.backref("events",
-                                                  order_by=id))
+    category = db.relationship("Category", backref=db.backref("events", order_by=id))
 
-    user = db.relationship("User",
-                           backref=db.backref("events",
-                                              order_by=id))
+    user = db.relationship("User", backref=db.backref("events", order_by=id))
 
     # backref is a simple way to also declare a new property on the Event class. You can then also use my_event.person (my_event is a pre-created query) to get to the person at that event.
 
@@ -82,27 +72,22 @@ class Attendee(db.Model):
 
     __tablename__ = "attendees"
 
-    id = db.Column(db.Integer, autoincrement=True,
-                   primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
     is_owner = db.Column(db.Boolean, default=True)
 
-    user = db.relationship("User",
-                           backref=db.backref("attendees",
-                                              order_by=id))
+    user = db.relationship("User",backref=db.backref("attendees", order_by=id))
 
-    event = db.relationship("Event",
-                            backref=db.backref("attendees",
-                                               order_by=id))
+    event = db.relationship("Event", backref=db.backref("attendees", order_by=id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return "<Event id=%s user_id=%s event_id=%s is_owner=%s>" % (self.id,
-                                                               self.user_id,
-                                                               self.event_id,
-                                                               self.is_owner)
+                                                                     self.user_id,
+                                                                     self.event_id,
+                                                                     self.is_owner)
 
 
 class Business(db.Model):
@@ -116,18 +101,16 @@ class Business(db.Model):
     rating = db.Column(db.Float, nullable=False)
     review_count = db.Column(db.Integer, nullable=True)
     url = db.Column(db.String(1000), nullable=True)
-    # latitude
-    # longitude
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
         return "<Event id=%s name=%s location=%s rating=%s review_count=%s url=%s>" % (self.id,
-                                                                                                self.name,
-                                                                                                self.location,
-                                                                                                self.rating,
-                                                                                                self.review_count,
-                                                                                                self.url)
+                                                                                       self.name,
+                                                                                       self.location,
+                                                                                       self.rating,
+                                                                                       self.review_count,
+                                                                                       self.url)
 
 
 class Category(db.Model):
@@ -135,8 +118,7 @@ class Category(db.Model):
 
     __tablename__ = "categories"
 
-    id = db.Column(db.Integer, autoincrement=True,
-                   primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     food_type = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):
@@ -151,8 +133,7 @@ class City(db.Model):
 
     __tablename__ = "cities"
 
-    id = db.Column(db.Integer, autoincrement=True,
-                   primary_key=True)
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     city_name = db.Column(db.String(64), nullable=False)
 
     def __repr__(self):

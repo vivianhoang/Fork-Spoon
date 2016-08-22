@@ -4,11 +4,20 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session
 #from flask_debugtoolbar import DebugToolbarExtension
 from datetime import datetime
+from twilio.rest import TwilioRestClient
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
-from model import connect_to_db, db, User, Event, Attendee, Business, Category, City
+from model import connect_to_db, db, User, Event, Attendee, Business, Category, City, Phone
+from db_func_test import get_specific_event, get_specific_attendee, get_specific_user
 from pytz import timezone
+import random
 import os
+
+ACCOUNT_SID = os.environ['TWILIO_SID']
+AUTH_TOKEN = os.environ['TWILIO_AUTH_KEY']
+
+twilio_client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
+
 
 auth = Oauth1Authenticator(
 
@@ -27,8 +36,40 @@ app.secret_key = "ABC"  # change this
 app.jinja_env.undefined = StrictUndefined
 
 
+def generate_verification_code():
+    """Generates a random 4 digit code."""
+    numbers = []
+
+    for _ in range(4):
+        numbers.append(str(random.randrange(9)))
+
+    return "".join(numbers)
+
+
+def generate_user_id():
+    """Generates a random 11 digit user_id."""
+    numbers = []
+
+    for _ in range(9):
+        numbers.append(str(random.randrange(9)))
+
+    joined_nums = "".join(numbers)
+    return int(joined_nums)
+
+
 def miles_to_meters(mile):
-    """Converts miles input to meters."""
+    """Converts miles input to meters.
+
+       >>> miles_to_meters(5)
+       8046.735439432223
+
+       >>> miles_to_meters(1)
+       1609.3470878864446
+
+       >>> miles_to_meters(20)
+       32186.94175772889
+
+    """
 
     mile = float(mile)
     meter_conversion = 0.00062137
@@ -51,13 +92,6 @@ def login_page():
     return render_template('login.html')
 
 
-@app.route('/signup')
-def signup_page():
-    """Show sign up page"""
-
-    return render_template('signup.html')
-
-
 @app.route('/login', methods=["POST"])
 def login_processed():
     """Processes old users."""
@@ -70,7 +104,7 @@ def login_processed():
 
     if not user:
         flash("Oops, you don't exist yet! Please sign up.")
-        return redirect('/signup')
+        return redirect('/enter_phone')
     if user.password != password:
         flash("The password you have given is incorrect.")
         return redirect('/login')
@@ -81,9 +115,64 @@ def login_processed():
     return redirect("/")
 
 
+@app.route('/enter_phone')
+def enter_phone():
+
+    return render_template("enter_phone.html")
+
+
+@app.route('/submit_phone', methods=["POST"])
+def submit_phone():
+
+    verification_code = generate_verification_code()
+    phone = request.form["phone"]
+    user_id = generate_user_id()
+
+    find_phone = Phone.query.filter_by(phone=phone).first()
+
+    if not find_phone:
+
+        new_phone = Phone(phone=phone, code=verification_code, id=user_id)
+
+        db.session.add(new_phone)
+        db.session.commit()
+    else:
+        flash("That number is already taken.")
+        return redirect("/enter_phone")
+
+    full_phone = '+1' + phone
+
+    twilio_client.messages.create(
+        to=full_phone,
+        from_='+16506514651',
+        body='Your verification code is ' + verification_code + ".",
+    )
+
+    return render_template("verification.html", user_id=user_id)
+
+
+@app.route('/submit_confirmation_code', methods=["POST"])
+def verification():
+
+    user_id = request.form['user_id']
+    private_info = Phone.query.filter_by(id=user_id).first()
+    phone_verification_code = private_info.code
+
+    submitted_verification_code = request.form["verification_code"]
+
+    if phone_verification_code == submitted_verification_code:
+        # go to sign up page
+        return render_template("signup.html", user_id=user_id)
+    else:
+        flash("Invalid code.")
+        return render_template("verification.html", user_id=user_id)
+
+
 @app.route('/signup', methods=['POST'])
 def signup_processed():
     """Processes new users."""
+
+    user_id = request.form["user_id"]
 
     first_name = request.form["first_name"]
     last_name = request.form["last_name"]
@@ -97,16 +186,19 @@ def signup_processed():
         flash("Oops, your email already exists! Please log in.")
         return redirect("/login")
     else:
-        new_user = User(first_name=first_name,
+        new_user = User(user_id=user_id,
+                        first_name=first_name,
                         last_name=last_name,
                         email=email,
                         password=password)
 
+    #when I instantiatiate the ID, I need to refer to the id from the phone number table
+
     db.session.add(new_user)
     db.session.commit()
 
-    session['id'] = new_user.id
-    user = User.query.filter_by(email=email).first()
+    session['id'] = new_user.user_id
+    user = get_specific_user(email)
 
     flash("Welcome to Food Adventures, %s. You have successfully logged in." % user.first_name)
     return redirect("/")
@@ -127,7 +219,9 @@ def logout():
 def profile(id):
     """Displays user's profile"""
 
-    user = User.query.get(id)
+    # need to figure out how to display anyone's page if I look for specific ID
+
+    user = User.query.filter_by(user_id=session['id']).first()
     return render_template("profile.html", user=user)
 
 
@@ -158,7 +252,11 @@ def complete_event():
         'sort': 0
     }
 
+    print city
+
     results = client.search(location, **params)
+
+    print results
 
     # instantiating new businesses that we find.
     businesses = results.businesses
@@ -203,17 +301,17 @@ def event_confirmed():
     category_id = request.form['category_id']
     business_id = business.id
 
-    user = User.query.filter_by(id=session['id']).first()
-    event = Event(start_time=start_datetime, end_time=end_datetime, category_id=category_id, business_id=business_id, user_id=user.id)
+    user = User.query.filter_by(user_id=session['id']).first()
+    event = Event(start_time=start_datetime, end_time=end_datetime, category_id=category_id, business_id=business_id, user_id=user.user_id)
 
     db.session.add(event)
     db.session.commit()
 
-    event = Event.query.filter_by(business_id=business_id).first()
+    event = get_specific_event(business_id)
     event_id = event.id
 
     # instantiating the attendee page so that it shows the creater is the owner/is attending. If there is a match, we can query through it and two rows will show up via event_id. If not, only one attendee will appear.
-    attendee = Attendee(user_id=user.id, event_id=event_id, is_owner=True)
+    attendee = Attendee(user_id=user.user_id, event_id=event_id, is_owner=True)
 
     db.session.add(attendee)
     db.session.commit()
@@ -229,10 +327,16 @@ def upcomming_events():
     time_now = datetime.now(tz=pacific)
 
     # looking for all unmatched events that haven't passed their date
-    user = User.query.filter_by(id=session['id']).first()
-    unmatched_events = Event.query.filter(Event.is_matched == False, Event.user_id == user.id, Event.end_time > time_now).all()
+    user = User.query.filter_by(user_id=session['id']).first()
+    unmatched_events = Event.query.filter(Event.is_matched == False, Event.user_id == user.user_id, Event.end_time > time_now).all()
 
-    matched_event = Attendee.query.filter_by(user_id=user.id).all()
+    # query through attendees to get all events of the current user
+    matched_event = get_specific_attendee(user.user_id)
+
+    print unmatched_events
+    print "no"
+    print matched_event
+    print "spam"
 
     # checking to see if the event is matched with someone else. If so, it is an UPCOMMING event
     # this can be written better
@@ -241,10 +345,23 @@ def upcomming_events():
         if a.event.is_matched == True:
             my_matched_events.append(a)
 
-    # grabs all previous events, both matched and unmatched
-    previous_events = Event.query.filter(Event.user_id == user.id, Event.end_time < time_now).all()
+    # grabbing the matched event_id so I can later search for the other person's id
+    same_event_id = []
+    for a in my_matched_events:
+        same_event_id.append(a.event_id)
 
-    return render_template("upcoming_events.html", unmatched_events=unmatched_events, my_matched_events=my_matched_events, previous_events=previous_events, time_now=time_now)
+    # filtering the events where the attendee has the same event_id but making sure that the current user's name doesn't show up when we include a link to their profile page
+    other_person_that_matched_with_user = []
+    for event_id in same_event_id:
+        other_person = Attendee.query.filter(Attendee.user_id != user.user_id).first()
+        other_person_that_matched_with_user.append(other_person)
+
+
+    # grabs all previous events, both matched and unmatched
+    previous_events = Event.query.filter(Event.user_id == user.user_id, Event.end_time < time_now).all()
+    print previous_events
+
+    return render_template("upcoming_events.html", unmatched_events=unmatched_events, my_matched_events=other_person_that_matched_with_user, previous_events=previous_events, time_now=time_now)
 
 
 @app.route("/find_events", methods=['GET'])
@@ -254,10 +371,10 @@ def available_events():
     pacific = timezone('US/Pacific')
     time_now = datetime.now(tz=pacific)
 
-    user = User.query.filter_by(id=session['id']).first()
+    user = User.query.filter_by(user_id=session['id']).first()
 
     # The past is less than the present/now, so we want to show all events where the future is greater than the present/now
-    events = Event.query.filter(Event.is_matched == False, Event.user_id != user.id, Event.end_time > time_now).all()
+    events = Event.query.filter(Event.is_matched == False, Event.user_id != user.user_id, Event.end_time > time_now).all()
 
     return render_template("available_events.html", events=events)
 
@@ -271,10 +388,10 @@ def matched_event():
 
     db.session.commit()
 
-    user = User.query.filter_by(id=session['id']).first()
+    user = User.query.filter_by(user_id=session['id']).first()
 
     # instantiating current user to attendees after selecting an event. Since the user is connecting to this particular event, they are not the owner, so is_owner is false.
-    attendee = Attendee(user_id=user.id, event_id=event_id, is_owner=False)
+    attendee = Attendee(user_id=user.user_id, event_id=event_id, is_owner=False)
 
     db.session.add(attendee)
     db.session.commit()
@@ -285,12 +402,13 @@ def matched_event():
 
 
 if __name__ == "__main__":
+    from doctest import testmod
+    if testmod().failed == 0:
+        app.debug = True
 
-    app.debug = True
+        connect_to_db(app)
 
-    connect_to_db(app)
+        #DebugToolbarExtension(app)
 
-    #DebugToolbarExtension(app)
-
-    # Since we run on vagrant, we need to put host equal to 0.0.0.0
-    app.run(host="0.0.0.0")
+        # Since we run on vagrant, we need to put host equal to 0.0.0.0
+        app.run(host="0.0.0.0")

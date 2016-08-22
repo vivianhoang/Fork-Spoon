@@ -13,24 +13,46 @@ class User(db.Model):
 
     __tablename__ = "users"
 
-    id = db.Column(db.Integer, autoincrement=True,
-                   primary_key=True)
+    # id is not used
+    id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("phone_num.id"))
     first_name = db.Column(db.String(60), nullable=False)
     last_name = db.Column(db.String(60), nullable=False)
     email = db.Column(db.String(60), unique=True, nullable=False)
     password = db.Column(db.String(64), nullable=False)
+    description = db.Column(db.String(2000), nullable=True)
 
-    # make buttons to log in as user A or user B on homepage
-    # location 127.0.0.1 /login/1 , and do for login 2
+    phone = db.relationship("Phone", backref=db.backref("users", order_by=id))
 
     def __repr__(self):
         """Provides helpful representation when printed."""
 
-        return "<User id=%s name=%s email=%s>" % (self.id,
-                                                  self.first_name,
-                                                  self.last_name,
-                                                  self.email,
-                                                  self.password)
+        return "<User id=%s user_id=%s first_name=%s last_name=%s email=%s> " % (self.id,
+                                                                     self.user_id,
+                                                                     self.first_name,
+                                                                     self.last_name,
+                                                                     self.email,
+                                                                     self.password,
+                                                                     self.description)
+
+
+class Phone(db.Model):
+    """User's verified phone number."""
+
+    __tablename__ = "phone_num"
+
+    id = db.Column(db.Integer, nullable=False, primary_key=True)
+    phone = db.Column(db.String(10), nullable=False, unique=True)
+    code = db.Column(db.String(4), nullable=True)
+
+    user = db.relationship("User", backref=db.backref("phone_num", order_by=id))
+
+    def __repr__(self):
+        """Provides helpful representation when printed."""
+
+        return "<User id=%s phone=%s code=%s>" % (self.id,
+                                                  self.phone,
+                                                  self.code)
 
 
 class Event(db.Model):
@@ -45,13 +67,13 @@ class Event(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"))
     business_id = db.Column(db.Integer, db.ForeignKey("businesses.id"))
     is_matched = db.Column(db.Boolean, nullable=False, default=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("phone_num.id"))
 
     business = db.relationship("Business", backref=db.backref("events", order_by=id))
 
     category = db.relationship("Category", backref=db.backref("events", order_by=id))
 
-    user = db.relationship("User", backref=db.backref("events", order_by=id))
+    phone = db.relationship("Phone", backref=db.backref("events", order_by=id))
 
     # backref is a simple way to also declare a new property on the Event class. You can then also use my_event.person (my_event is a pre-created query) to get to the person at that event.
 
@@ -73,11 +95,11 @@ class Attendee(db.Model):
     __tablename__ = "attendees"
 
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("phone_num.id"))
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
     is_owner = db.Column(db.Boolean, default=True)
 
-    user = db.relationship("User",backref=db.backref("attendees", order_by=id))
+    phone = db.relationship("Phone", backref=db.backref("attendees", order_by=id))
 
     event = db.relationship("Event", backref=db.backref("attendees", order_by=id))
 
@@ -142,14 +164,25 @@ class City(db.Model):
         return "<Event id=%s city=%s>" % (self.id,
                                           self.city_name)
 
+
+def example_data():
+    user = User(id=1, first_name="Gordon", last_name="Ramsay", email="gramsay@gmail.com", password="123")
+    business = Business(id=1, name="Good Eats", location="123 Nowhere St., FakeCity, FakeState FakeZipcode", rating=4.5, review_count=1010, url="http://www.afakeurllink.com")
+    category = Category(id=1, food_type="American")
+    event = Event(id=1, start_time="01/01/2016 01:00", end_time="01/01/2016 02:00", category_id=1, business_id=1, is_matched=False, user_id=1)
+    attendee = Attendee(user_id=1, event_id=1, is_owner=True)
+    city = City(city_name="Paris")
+
+    db.session.add_all([user, event, attendee, business, category, city])
+    db.session.commit()
 ################################################################################
 
 
-def connect_to_db(app):
+def connect_to_db(app, db_uri='postgresql:///food'):
     """Connect the database to our Flask app."""
 
     # created.db 'food' in virtual env, ran model.py, then created all in my model, then run seed to populate table.
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///food'
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     db.app = app
     db.init_app(app)
 

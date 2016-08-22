@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>Enter your phone number:</h1>
+
+    <form action="/submit_phone" method="POST">
+        <div>
+            <label>Phone:
+                <input type="text" name="phone" minlength="10" maxlength="10" required>
+            </label>
+            <div> 
+                <input type="submit" value="Submit">
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

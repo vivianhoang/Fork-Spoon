@@ -6,19 +6,19 @@
     <form action="/signup" method="POST">
         <div>
             <label>First Name:
-                <input type="first_name" name="first_name" required>
+                <input type="text" name="first_name" required>
             </label>
         </div>
 
         <div>
             <label>Last Name:
-                <input type="last_name" name="last_name" required>
+                <input type="text" name="last_name" required>
             </label>
         </div>
 
         <div>
             <label>Email:
-                <input type="email" name="email" required>
+                <input type="text" name="email" required>
             </label>
         </div>
 
@@ -30,6 +30,7 @@
 
         <div> 
             <input type="submit" value="Log In">
+            <input type="hidden" name="user_id" value="{{user_id}}">
         </div>
     </form>
 

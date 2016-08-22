@@ -33,14 +33,13 @@
         <br>
         <div>
             <label>Distance (MAX. 25mi.):
-                <input type:"text" name="distance" required>
+                <input type="number" min="0" max="25" name="distance" required>
             </label>
         </div>
         <br>
         <div>
             <input type="submit" value="Submit My Event">
         </div>
-
     </form>
 
 {% endblock %}

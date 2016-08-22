@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <h1>Enter verification code:</h1>
+
+    <form action="/submit_confirmation_code", method="POST">
+        <div>
+            <label>Verification Code:
+                <input type="string" name="verification_code" minlength="4" maxlength="4" required>
+            </label>
+            <div> 
+                <input type="submit" value="Submit">
+                <input type="hidden" name="user_id" value="{{user_id}}">
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

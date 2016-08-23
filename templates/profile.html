@@ -1,8 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<style>
+
+textarea { 
+    font-size: 16px;
+    font-family: Verdana;
+    font-style: italic;
+}
+
+</style>
+
 <h3>{{user.first_name}} {{user.last_name}} </h3>
 
 <p>USER'S PROFILE!</p>
 
+{% if user.description %}
+
+    <textarea id="profile-description" rows="20" cols="50" name="profile-description" form="usrform">{{user.description}}432</textarea>
+
+{% else %}
+
+    <textarea id="profile-description" rows="20" cols="50" name="profile-description" form="usrform">Enter your profile here...</textarea>
+
+{% endif %}
 {% endblock %}

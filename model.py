@@ -27,13 +27,13 @@ class User(db.Model):
     def __repr__(self):
         """Provides helpful representation when printed."""
 
-        return "<User id=%s user_id=%s first_name=%s last_name=%s email=%s> " % (self.id,
-                                                                     self.user_id,
-                                                                     self.first_name,
-                                                                     self.last_name,
-                                                                     self.email,
-                                                                     self.password,
-                                                                     self.description)
+        return "<User id=%s user_id=%s first_name=%s last_name=%s email=%s password=%s description=%s> " % (self.id,
+                               self.user_id,
+                               self.first_name,
+                               self.last_name,
+                               self.email,
+                               self.password,
+                               self.description)
 
 
 class Phone(db.Model):

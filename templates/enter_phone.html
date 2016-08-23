@@ -2,6 +2,7 @@
 {% block content %}
 
     <h1>Enter your phone number:</h1>
+    <h4>We need to check that you are human. Please verify your phone number.</h4>
 
     <form action="/submit_phone" method="POST">
         <div>
@@ -9,7 +10,7 @@
                 <input type="text" name="phone" minlength="10" maxlength="10" required>
             </label>
             <div> 
-                <input type="submit" value="Submit">
+                <input type="submit" value="Request Code">
             </div>
         </div>
     </form>

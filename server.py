@@ -12,6 +12,7 @@ from db_func_test import get_specific_event, get_specific_attendee, get_specific
 from pytz import timezone
 import random
 import os
+import oauth2
 
 ACCOUNT_SID = os.environ['TWILIO_SID']
 AUTH_TOKEN = os.environ['TWILIO_AUTH_KEY']
@@ -50,7 +51,7 @@ def generate_user_id():
     """Generates a random 11 digit user_id."""
     numbers = []
 
-    for _ in range(9):
+    for _ in range(random.randrange(9)):
         numbers.append(str(random.randrange(9)))
 
     joined_nums = "".join(numbers)
@@ -109,7 +110,7 @@ def login_processed():
         flash("The password you have given is incorrect.")
         return redirect('/login')
 
-    session['id'] = user.id
+    session['id'] = user.user_id
 
     flash("Welcome back, %s. You have successfully logged in." % user.first_name)
     return redirect("/")
@@ -225,6 +226,31 @@ def profile(id):
     return render_template("profile.html", user=user)
 
 
+# @app.route("/edit-profile", methods=['GET'])
+# def edit_profile():
+#     """Edit profile page"""
+
+#     # need to figure out how to display anyone's page if I look for specific ID
+
+#     user = User.query.filter_by(user_id=session['id']).first()
+#     return render_template("edit-profile.html", user=user)
+
+
+# @app.route("/save-edit-profile", methods=["POST"])
+# def save_profile():
+#     """Save profile page"""
+
+#     user_id = request.form["id"]
+#     profile = "/profile/" + str(user_id)
+
+#     # User is returned to their own profile after editing their profile.
+
+#     # if user updated data, commit the changes to database and return to profile page
+#     # else, just return to profile page
+#     flash("Your profile has been saved.")
+#     return redirect(profile)
+
+
 @app.route("/create_event")
 def make_search():
     """Displays event creation page and forms to query through Yelp restaurants."""
@@ -333,11 +359,6 @@ def upcomming_events():
     # query through attendees to get all events of the current user
     matched_event = get_specific_attendee(user.user_id)
 
-    print unmatched_events
-    print "no"
-    print matched_event
-    print "spam"
-
     # checking to see if the event is matched with someone else. If so, it is an UPCOMMING event
     # this can be written better
     my_matched_events = []
@@ -356,7 +377,6 @@ def upcomming_events():
         other_person = Attendee.query.filter(Attendee.user_id != user.user_id).first()
         other_person_that_matched_with_user.append(other_person)
 
-
     # grabs all previous events, both matched and unmatched
     previous_events = Event.query.filter(Event.user_id == user.user_id, Event.end_time < time_now).all()
     print previous_events
@@ -371,7 +391,9 @@ def available_events():
     pacific = timezone('US/Pacific')
     time_now = datetime.now(tz=pacific)
 
+    print session["id"]
     user = User.query.filter_by(user_id=session['id']).first()
+    print user
 
     # The past is less than the present/now, so we want to show all events where the future is greater than the present/now
     events = Event.query.filter(Event.is_matched == False, Event.user_id != user.user_id, Event.end_time > time_now).all()
@@ -399,6 +421,16 @@ def matched_event():
     flash("You have a new meal plan!")
 
     return redirect("/upcoming_events")
+
+
+@app.route("/other_profile/<int:id>", methods=['GET'])
+def other_profile(id):
+    """Displays other user's profile"""
+
+    # need to figure out how to display anyone's page if I look for specific ID
+
+    user = User.query.filter_by(user_id=id).first()
+    return render_template("other_user_profile.html", user=user)
 
 
 if __name__ == "__main__":

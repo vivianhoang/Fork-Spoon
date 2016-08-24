@@ -125,15 +125,24 @@ def enter_phone():
 @app.route('/submit_phone', methods=["POST"])
 def submit_phone():
 
+    # SEE IF I DON'T HAVE TO SAVE PHONE RIGHT AWAY
     verification_code = generate_verification_code()
-    phone = request.form["phone"]
+    phone_number = request.form["phone_number"]
     user_id = generate_user_id()
 
-    find_phone = Phone.query.filter_by(phone=phone).first()
+    find_phone = Phone.query.filter_by(phone=phone_number).first()
 
     if not find_phone:
 
-        new_phone = Phone(phone=phone, code=verification_code, id=user_id)
+        full_phone = '+1' + phone_number
+
+        twilio_client.messages.create(
+            to=full_phone,
+            from_='+16506514651',
+            body='Your verification code is ' + verification_code + ".",
+        )
+
+        new_phone = Phone(code=verification_code, id=user_id)
 
         db.session.add(new_phone)
         db.session.commit()
@@ -141,21 +150,14 @@ def submit_phone():
         flash("That number is already taken.")
         return redirect("/enter_phone")
 
-    full_phone = '+1' + phone
-
-    twilio_client.messages.create(
-        to=full_phone,
-        from_='+16506514651',
-        body='Your verification code is ' + verification_code + ".",
-    )
-
-    return render_template("verification.html", user_id=user_id)
+    return render_template("verification.html", phone_number=phone_number, verification_code=verification_code, user_id=user_id)
 
 
 @app.route('/submit_confirmation_code', methods=["POST"])
 def verification():
 
     user_id = request.form['user_id']
+    phone_number = request.form['phone_number']
     private_info = Phone.query.filter_by(id=user_id).first()
     phone_verification_code = private_info.code
 
@@ -163,10 +165,10 @@ def verification():
 
     if phone_verification_code == submitted_verification_code:
         # go to sign up page
-        return render_template("signup.html", user_id=user_id)
+        return render_template("signup.html", user_id=user_id, phone_number=phone_number)
     else:
         flash("Invalid code.")
-        return render_template("verification.html", user_id=user_id)
+        return render_template("verification.html", user_id=user_id, phone_number=phone_number)
 
 
 @app.route('/signup', methods=['POST'])
@@ -174,7 +176,7 @@ def signup_processed():
     """Processes new users."""
 
     user_id = request.form["user_id"]
-
+    phone_number = request.form["phone_number"]
     first_name = request.form["first_name"]
     last_name = request.form["last_name"]
     email = request.form["email"]
@@ -193,6 +195,8 @@ def signup_processed():
                         email=email,
                         password=password)
 
+        Phone.query.filter_by(id=user_id).update({"phone": phone_number})
+
     #when I instantiatiate the ID, I need to refer to the id from the phone number table
 
     db.session.add(new_user)
@@ -202,7 +206,7 @@ def signup_processed():
     user = get_specific_user(email)
 
     flash("Welcome to Food Adventures, %s. You have successfully logged in." % user.first_name)
-    return redirect("/")
+    return render_template("welcomepage.html")
 
 
 @app.route("/logout")
@@ -216,39 +220,28 @@ def logout():
     return redirect("/")
 
 
-@app.route("/profile/<int:id>", methods=['GET'])
+@app.route("/profile/<int:id>")
 def profile(id):
-    """Displays user's profile"""
-
-    # need to figure out how to display anyone's page if I look for specific ID
+    """Displays/saves user's profile"""
 
     user = User.query.filter_by(user_id=session['id']).first()
+
     return render_template("profile.html", user=user)
 
 
-# @app.route("/edit-profile", methods=['GET'])
-# def edit_profile():
-#     """Edit profile page"""
+@app.route("/profile-edit", methods=['POST'])
+def edit_profile():
+    """Displays/saves user's profile"""
 
-#     # need to figure out how to display anyone's page if I look for specific ID
+    description = request.form.get("description")
+    print "eggs"
+    print description
 
-#     user = User.query.filter_by(user_id=session['id']).first()
-#     return render_template("edit-profile.html", user=user)
+    User.query.filter_by(user_id=session['id']).update({"description": description})
 
+    db.session.commit()
 
-# @app.route("/save-edit-profile", methods=["POST"])
-# def save_profile():
-#     """Save profile page"""
-
-#     user_id = request.form["id"]
-#     profile = "/profile/" + str(user_id)
-
-#     # User is returned to their own profile after editing their profile.
-
-#     # if user updated data, commit the changes to database and return to profile page
-#     # else, just return to profile page
-#     flash("Your profile has been saved.")
-#     return redirect(profile)
+    return "You have successfully updated your profile."
 
 
 @app.route("/create_event")
@@ -349,6 +342,9 @@ def event_confirmed():
 def upcomming_events():
     """Displays events user has matched with and/or created"""
 
+
+    # CURRENTLY NOT DISPLAYING "YOUR MATCH" CORRECTLY, ONLY SHOWS THE CREATOR
+
     pacific = timezone('US/Pacific')
     time_now = datetime.now(tz=pacific)
 
@@ -379,7 +375,6 @@ def upcomming_events():
 
     # grabs all previous events, both matched and unmatched
     previous_events = Event.query.filter(Event.user_id == user.user_id, Event.end_time < time_now).all()
-    print previous_events
 
     return render_template("upcoming_events.html", unmatched_events=unmatched_events, my_matched_events=other_person_that_matched_with_user, previous_events=previous_events, time_now=time_now)
 
@@ -398,7 +393,7 @@ def available_events():
     # The past is less than the present/now, so we want to show all events where the future is greater than the present/now
     events = Event.query.filter(Event.is_matched == False, Event.user_id != user.user_id, Event.end_time > time_now).all()
 
-    return render_template("available_events.html", events=events)
+    return render_template("find_events.html", events=events)
 
 
 @app.route("/matched", methods=['POST'])

@@ -1,16 +1,18 @@
 {% extends 'base.html'%}
 {% block content %}
 
-    <h1>Food</h1>
+    {% if "id" in session %}
+        <h1>Food Things</h1>
 
-    <!-- have an image/welcome -->
-    <div>
-        <img src="http://mag101.com/blog/gallery_2012_8_15/Cute_Cat_with_Watermelon_Hat_1_autve.jpg" alt="Cat Melon, our savior <3"/>
-    </div>
+        <div>
+            <img src="http://mag101.com/blog/gallery_2012_8_15/Cute_Cat_with_Watermelon_Hat_1_autve.jpg" alt="Cat Melon, our savior <3"/>
+        </div>
 
-    <div>
-        <h3>Let's get started and create your event <a href="/event_creation">here</a>.</h3>
-    </div>
-
+        <div>
+            <h3>Let's get started and create your event <a href="/create_event">here</a>.</h3>
+        </div>
+    {% else %}
+        <h1>Hello World! You aren't logged in.</h1>
+    {% endif %}
 
 {% endblock %}

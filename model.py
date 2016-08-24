@@ -20,7 +20,7 @@ class User(db.Model):
     last_name = db.Column(db.String(60), nullable=False)
     email = db.Column(db.String(60), unique=True, nullable=False)
     password = db.Column(db.String(64), nullable=False)
-    description = db.Column(db.String(2000), nullable=True)
+    description = db.Column(db.String(1000), nullable=True)
 
     phone = db.relationship("Phone", backref=db.backref("users", order_by=id))
 
@@ -42,7 +42,7 @@ class Phone(db.Model):
     __tablename__ = "phone_num"
 
     id = db.Column(db.Integer, nullable=False, primary_key=True)
-    phone = db.Column(db.String(10), nullable=False, unique=True)
+    phone = db.Column(db.String(10), nullable=True, unique=True)
     code = db.Column(db.String(4), nullable=True)
 
     user = db.relationship("User", backref=db.backref("phone_num", order_by=id))

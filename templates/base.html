@@ -2,12 +2,14 @@
 <html>
 <head>
     <title>Food App</title>
-    
+
+    <link rel="stylesheet" type="text/css" href="static/stylesheet.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 
 </head>
+
 <body>
 
 Food Adventures |
@@ -19,10 +21,10 @@ Food Adventures |
     <a href="/find_events">Find Events</a> |
     <a href="/upcoming_events">Upcoming Events</a> |
     <a href="/logout">Logout</a>
-{% else %}
-    <a href="/login">Login</a> |
-    <a href="/enter_phone">Sign Up</a>
-{% endif %}
+    {% else %}
+        <a href="/login">Login</a> |
+        <a href="/enter_phone">Sign Up</a>
+    {% endif %}
 
 <hr>
 
@@ -31,8 +33,10 @@ Food Adventures |
 {% endfor %}
 
 {% block content %}
-    DON'T FORGET TO PUT THE BODY!!!!
+    <p>HOMEPAGE</p>
 {% endblock %}
+
+
 
 </body>
 </html>

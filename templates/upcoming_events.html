@@ -4,7 +4,7 @@
 <h3>Currently Unmatched</h3>
     {% if unmatched_events %}
         {% for event in unmatched_events%}
-            <li>{{event.business.name}} | {{event.start_time.strftime("%b %d, %Y")}} from {{event.start_time.strftime("%H:%M")}} - {{event.end_time.strftime("%H:%M")}} | {{event.phone.id}} (REMOVE NAME)</li>
+            <li>{{event.business.name}} | {{event.start_time.strftime("%b %d, %Y")}} from {{event.start_time.strftime("%H:%M")}} - {{event.end_time.strftime("%H:%M")}} | {{event.phone.id}} (REMOVE ID)</li>
         {% endfor %}
     {% else %}
         <p>You have no created events :'(</p>
@@ -15,7 +15,7 @@
 <h3>Upcoming Events</h3>
     {% if my_matched_events %}
         {% for matched_event in my_matched_events%}
-            <li>{{matched_event.event.business.name}} | {{matched_event.event.start_time.strftime("%b %d, %Y")}} from {{matched_event.event.start_time.strftime("%H:%M")}} - {{matched_event.event.end_time.strftime("%H:%M")}} | <a href="/other_profile/{{matched_event.event.phone.id}}">View Your Match!</a></li>
+            <li>{{matched_event.event.business.name}} | {{matched_event.event.start_time.strftime("%b %d, %Y")}} from {{matched_event.event.start_time.strftime("%H:%M")}} - {{matched_event.event.end_time.strftime("%H:%M")}} | <a href="/other_profile/{{matched_event.user_id}}">View Your Match!</a></li>
         {% endfor %}
     {% else %}
         <p>You have no upcoming matched events :( </p>
@@ -27,7 +27,7 @@
 <h3>Previous Events</h3>
     {% if previous_events %}
         {% for previous_event in previous_events %}
-            <li>{{previous_event.business.name}} | {{previous_event.start_time.strftime("%b %d, %Y")}} from {{previous_event.start_time.strftime("%H:%M")}} - {{previous_event.end_time.strftime("%H:%M")}} | {{previous_event.phone.id}} (REMOVE NAME)</li>
+            <li>{{previous_event.business.name}} | {{previous_event.start_time.strftime("%b %d, %Y")}} from {{previous_event.start_time.strftime("%H:%M")}} - {{previous_event.end_time.strftime("%H:%M")}} | {{previous_event.phone.id}} (REMOVE ID)</li>
         {% endfor %}
     {% else %}
         <p>You have no old events :(</p>

@@ -1,0 +1,26 @@
+{% extends 'base.html'%}
+{% block content %}
+
+<p>This is my event page with all available events that haven't been matched with someone yet. Use submit button or create radio buttons for each. Instantiate Attendees and change "is matched" in Event to True</p>
+
+    <form action="/matched", method="POST">
+        <div>
+            <label>
+                {% if events%}
+                    {% for event in events%}
+                        <input type="radio" name="event_id" value="{{event.id}}" required><a href={{event.business.url}}>{{event.business.name}} </a>| {{event.start_time.strftime("%b %m, %Y")}} from {{event.start_time.strftime("%H:%M")}} - {{event.end_time.strftime("%H:%M")}} | {{event.phone.id}} (REMOVE ID)<br>
+
+                    {% endfor %}
+                {% endif %}
+            </label>
+        </div>
+        <div>
+            {% if events %}
+                <input type="submit" value="I want to join this event!">
+            {% else %}
+                <p>Oops! There are currently no events available :'(</p>
+            {% endif %}
+        </div>
+    </form>
+
+{% endblock %}

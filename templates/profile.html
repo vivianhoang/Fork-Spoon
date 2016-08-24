@@ -9,19 +9,40 @@ textarea {
     font-style: italic;
 }
 
+em {
+    font-size: 11px;
+}
+
+#chars {
+    font-size: 11px;
+}
+
 </style>
+
 
 <h3>{{user.first_name}} {{user.last_name}} </h3>
 
 <p>USER'S PROFILE!</p>
 
-{% if user.description %}
+<div class="label">Profile: <em>(1000 characters max.)</em></div>
+<form id="profile-description" action="/profile-edit" method="POST">
 
-    <textarea id="profile-description" rows="20" cols="50" name="profile-description" form="usrform">{{user.description}}432</textarea>
+    {% if user.description %}
+        <div>
+            <textarea id="profile-bio" name="profile-bio" rows="20" cols="50">{{user.description}}</textarea>
+        </div>
 
-{% else %}
+    {% else %}
+        <div>
+            <textarea id="profile-bio" name="profile-bio" rows="20" cols="50" placeholder="Enter your profile here..."></textarea>
+        </div>
+    {% endif %}
 
-    <textarea id="profile-description" rows="20" cols="50" name="profile-description" form="usrform">Enter your profile here...</textarea>
+    <div>
+        <input type="submit" value="Update my profile!"> &nbsp <span id="chars"></span>
+    </div>
 
-{% endif %}
+</form>
+
+<script src="/static/js/edit-profile.js"></script>
 {% endblock %}

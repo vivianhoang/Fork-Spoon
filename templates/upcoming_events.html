@@ -13,9 +13,9 @@
     <br></br>
 
 <h3>Upcoming Events</h3>
-    {% if my_matched_events %}
-        {% for matched_event in my_matched_events%}
-            <li>{{matched_event.event.business.name}} | {{matched_event.event.start_time.strftime("%b %d, %Y")}} from {{matched_event.event.start_time.strftime("%H:%M")}} - {{matched_event.event.end_time.strftime("%H:%M")}} | <a href="/other_profile/{{matched_event.user_id}}">View Your Match!</a></li>
+    {% if other_persons %}
+        {% for other_person in other_persons%}
+            <li>{{other_person.event.business.name}} | {{other_person.event.start_time.strftime("%b %d, %Y")}} from {{other_person.event.start_time.strftime("%H:%M")}} - {{other_person.event.end_time.strftime("%H:%M")}} | <a href="/other_profile/{{other_person.user_id}}">View Your Match!</a></li>
         {% endfor %}
     {% else %}
         <p>You have no upcoming matched events :( </p>

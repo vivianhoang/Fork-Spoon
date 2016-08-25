@@ -46,6 +46,45 @@
             <input type="submit" value="Create my event!">
         </div>
     </form>
+    <div id="map" style="width:200px;height:300px"></div> 
+
+    <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_KEY}}&callback=initMap"
+    async defer></script>
+
+    <script>
+        // var map;
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+            // zoom: 4,
+            // center: myLatLng
+        });
+
+        // var results = [
+        //     {{businesses}}
+        // ]
+
+        var results = [
+        {name: '1', lat: -25, lng: 131},
+        {name: '2', lat: -25.01, lng: 131.01},
+        {name: '3', lat: -25.02, lng: 131.02},
+        {name: '4', lat: -25.03, lng: 131.03},
+        ]
+
+        var bounds = new google.maps.LatLngBounds();
+            for(var i = 0; i < results.length; i++) {
+                var marker = new google.maps.Marker({
+                    // position: {lat: results[i].location.coordinate.latitude, lng: results[i].location.coordinate.longitude},
+                    position: {lat: results[i].lat, lng: results[i].lng},
+                    map: map,
+                    title: results[i].name
+                  });
+                bounds.extend(marker.getPosition());
+            }
+
+        map.fitBounds(bounds);
+
+      }
+    </script>
 
     <script>
     $( function() {

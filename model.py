@@ -50,7 +50,7 @@ class Phone(db.Model):
     def __repr__(self):
         """Provides helpful representation when printed."""
 
-        return "<User id=%s phone=%s code=%s>" % (self.id,
+        return "<Phone id=%s phone=%s code=%s>" % (self.id,
                                                   self.phone,
                                                   self.code)
 
@@ -106,7 +106,7 @@ class Attendee(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event id=%s user_id=%s event_id=%s is_owner=%s>" % (self.id,
+        return "<Attendee id=%s user_id=%s event_id=%s is_owner=%s>" % (self.id,
                                                                      self.user_id,
                                                                      self.event_id,
                                                                      self.is_owner)
@@ -123,16 +123,20 @@ class Business(db.Model):
     rating = db.Column(db.Float, nullable=False)
     review_count = db.Column(db.Integer, nullable=True)
     url = db.Column(db.String(1000), nullable=True)
+    lat = db.Column(db.Float, nullable=False)
+    lng = db.Column(db.Float, nullable=False)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event id=%s name=%s location=%s rating=%s review_count=%s url=%s>" % (self.id,
-                                                                                       self.name,
-                                                                                       self.location,
-                                                                                       self.rating,
-                                                                                       self.review_count,
-                                                                                       self.url)
+        return "<Business id=%s name=%s location=%s rating=%s review_count=%s url=%s lat=%s lon=%s>" % (self.id,
+                                                                                                        self.name,
+                                                                                                        self.location,
+                                                                                                        self.rating,
+                                                                                                        self.review_count,
+                                                                                                        self.url,
+                                                                                                        self.lat,
+                                                                                                        self.lng)
 
 
 class Category(db.Model):
@@ -146,7 +150,7 @@ class Category(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event id=%s food_type=%s>" % (self.id,
+        return "<Category id=%s food_type=%s>" % (self.id,
                                                self.food_type)
 
 
@@ -161,7 +165,7 @@ class City(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Event id=%s city=%s>" % (self.id,
+        return "<City id=%s city=%s>" % (self.id,
                                           self.city_name)
 
 

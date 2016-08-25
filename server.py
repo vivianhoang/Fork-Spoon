@@ -4,6 +4,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session
 #from flask_debugtoolbar import DebugToolbarExtension
 from datetime import datetime
+from google_key import GOOGLE_KEY
 from twilio.rest import TwilioRestClient
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
@@ -11,15 +12,17 @@ from model import connect_to_db, db, User, Event, Attendee, Business, Category, 
 from db_func_test import get_specific_event, get_specific_attendee, get_specific_user
 from pytz import timezone
 import random
+import json
 import os
 import oauth2
 
+# Authenticating TWILIO
 ACCOUNT_SID = os.environ['TWILIO_SID']
 AUTH_TOKEN = os.environ['TWILIO_AUTH_KEY']
 
 twilio_client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 
-
+# Authenticating YELP
 auth = Oauth1Authenticator(
 
     consumer_key=os.environ['consumer_key'],
@@ -27,6 +30,7 @@ auth = Oauth1Authenticator(
     token=os.environ['token'],
     token_secret=os.environ['token_secret']
 )
+
 
 client = Client(auth)
 
@@ -51,11 +55,15 @@ def generate_user_id():
     """Generates a random 11 digit user_id."""
     numbers = []
 
+    # need to fix so all id's will be unique
     for _ in range(random.randrange(9)):
         numbers.append(str(random.randrange(9)))
 
     joined_nums = "".join(numbers)
     return int(joined_nums)
+
+
+# def check_user_id():
 
 
 def miles_to_meters(mile):
@@ -234,9 +242,6 @@ def edit_profile():
     """Displays/saves user's profile"""
 
     description = request.form.get("description")
-    print "eggs"
-    print description
-
     User.query.filter_by(user_id=session['id']).update({"description": description})
 
     db.session.commit()
@@ -271,11 +276,7 @@ def complete_event():
         'sort': 0
     }
 
-    print city
-
     results = client.search(location, **params)
-
-    print results
 
     # instantiating new businesses that we find.
     businesses = results.businesses
@@ -285,7 +286,7 @@ def complete_event():
     for business in businesses:
         find_business = Business.query.filter_by(url=business.url, name=business.name).first()
         if not find_business:
-            new_business = Business(name=business.name, location=', '.join(business.location.display_address), rating=business.rating, review_count=business.review_count, url=business.url)
+            new_business = Business(name=business.name, location=', '.join(business.location.display_address), rating=business.rating, review_count=business.review_count, url=business.url, lat=business.location.coordinate.latitude, lng=business.location.coordinate.longitude)
             db.session.add(new_business)
             db.session.commit()
 
@@ -295,7 +296,7 @@ def complete_event():
              "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30",
              "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"]
 
-    return render_template("restaurants.html", businesses=businesses, times=times, category_id=category_id)
+    return render_template("restaurants.html", GOOGLE_KEY=GOOGLE_KEY, businesses=businesses, times=times, category_id=category_id)
 
 
 @app.route("/confirmation", methods=["POST"])
@@ -355,28 +356,28 @@ def upcomming_events():
     # query through attendees to get all events of the current user
     matched_event = get_specific_attendee(user.user_id)
 
-    # checking to see if the event is matched with someone else. If so, it is an UPCOMMING event
+    # Grabbing all my matched events. Preparing to look for other match.
     # this can be written better
     my_matched_events = []
     for a in matched_event:
         if a.event.is_matched == True:
             my_matched_events.append(a)
 
-    # grabbing the matched event_id so I can later search for the other person's id
+    # grabbing the matched event_id.
     same_event_id = []
     for a in my_matched_events:
         same_event_id.append(a.event_id)
 
-    # filtering the events where the attendee has the same event_id but making sure that the current user's name doesn't show up when we include a link to their profile page
+    # filtering the events where the attendee has the same event_id but making sure that the current user's name doesn't show up when we include a link to their profile page. Used to display the event info and link to other_person's profile page.
     other_person_that_matched_with_user = []
     for event_id in same_event_id:
-        other_person = Attendee.query.filter(Attendee.user_id != user.user_id).first()
+        other_person = Attendee.query.filter(Attendee.user_id != user.user_id, Attendee.event_id == event_id).first()
         other_person_that_matched_with_user.append(other_person)
 
     # grabs all previous events, both matched and unmatched
     previous_events = Event.query.filter(Event.user_id == user.user_id, Event.end_time < time_now).all()
 
-    return render_template("upcoming_events.html", unmatched_events=unmatched_events, my_matched_events=other_person_that_matched_with_user, previous_events=previous_events, time_now=time_now)
+    return render_template("upcoming_events.html", unmatched_events=unmatched_events, other_persons=other_person_that_matched_with_user, previous_events=previous_events, time_now=time_now)
 
 
 @app.route("/find_events", methods=['GET'])
@@ -386,9 +387,7 @@ def available_events():
     pacific = timezone('US/Pacific')
     time_now = datetime.now(tz=pacific)
 
-    print session["id"]
     user = User.query.filter_by(user_id=session['id']).first()
-    print user
 
     # The past is less than the present/now, so we want to show all events where the future is greater than the present/now
     events = Event.query.filter(Event.is_matched == False, Event.user_id != user.user_id, Event.end_time > time_now).all()

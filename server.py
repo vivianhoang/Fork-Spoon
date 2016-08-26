@@ -9,10 +9,10 @@ from twilio.rest import TwilioRestClient
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
 from model import connect_to_db, db, User, Event, Attendee, Business, Category, City, Phone
-from db_func_test import get_specific_event, get_specific_attendee, get_specific_user
+from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business, update_phone
 from pytz import timezone
 import random
-import json
+from flask import jsonify
 import os
 import oauth2
 
@@ -42,7 +42,22 @@ app.jinja_env.undefined = StrictUndefined
 
 
 def generate_verification_code():
-    """Generates a random 4 digit code."""
+    """Generates a random 4 digit code.
+
+       >>> import random
+
+       >>> random.seed(1)
+
+       >>> generate_verification_code()
+       '1762'
+
+       >>> generate_verification_code()
+       '4457'
+
+       >>> generate_verification_code()
+       '0073'
+
+    """
     numbers = []
 
     for _ in range(4):
@@ -52,7 +67,22 @@ def generate_verification_code():
 
 
 def generate_user_id():
-    """Generates a random 11 digit user_id."""
+    """Generates a random 9 digit user_id.
+
+       >>> import random
+
+       >>> random.seed(2)
+
+       >>> generate_user_id()
+       80076625
+
+       >>> generate_user_id()
+       4
+
+       >>> generate_user_id()
+       84420042
+
+    """
     numbers = []
 
     # need to fix so all id's will be unique
@@ -61,9 +91,6 @@ def generate_user_id():
 
     joined_nums = "".join(numbers)
     return int(joined_nums)
-
-
-# def check_user_id():
 
 
 def miles_to_meters(mile):
@@ -133,7 +160,6 @@ def enter_phone():
 @app.route('/submit_phone', methods=["POST"])
 def submit_phone():
 
-    # SEE IF I DON'T HAVE TO SAVE PHONE RIGHT AWAY
     verification_code = generate_verification_code()
     phone_number = request.form["phone_number"]
     user_id = generate_user_id()
@@ -203,7 +229,8 @@ def signup_processed():
                         email=email,
                         password=password)
 
-        Phone.query.filter_by(id=user_id).update({"phone": phone_number})
+        # used in test to update phone number
+        update_phone(user_id, phone_number)
 
     #when I instantiatiate the ID, I need to refer to the id from the phone number table
 
@@ -278,6 +305,8 @@ def complete_event():
 
     results = client.search(location, **params)
 
+    # NEED TO JSONIFY RESULTS
+
     # instantiating new businesses that we find.
     businesses = results.businesses
     category = Category.query.filter_by(food_type=term).first()
@@ -315,7 +344,7 @@ def event_confirmed():
     end_datetime = datetime.strptime(date_end_time, "%m/%d/%Y %H:%M")
 
     business_url = request.form['business_url']
-    business = Business.query.filter_by(url=business_url).first()
+    business = get_specific_business(business_url)
 
     # getting category id and business id to instantiate event
     category_id = request.form['category_id']
@@ -342,9 +371,6 @@ def event_confirmed():
 @app.route("/upcoming_events", methods=['GET'])
 def upcomming_events():
     """Displays events user has matched with and/or created"""
-
-
-    # CURRENTLY NOT DISPLAYING "YOUR MATCH" CORRECTLY, ONLY SHOWS THE CREATOR
 
     pacific = timezone('US/Pacific')
     time_now = datetime.now(tz=pacific)

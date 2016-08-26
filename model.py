@@ -151,7 +151,7 @@ class Category(db.Model):
         """Provide helpful representation when printed."""
 
         return "<Category id=%s food_type=%s>" % (self.id,
-                                               self.food_type)
+                                                  self.food_type)
 
 
 class City(db.Model):
@@ -166,18 +166,24 @@ class City(db.Model):
         """Provide helpful representation when printed."""
 
         return "<City id=%s city=%s>" % (self.id,
-                                          self.city_name)
+                                         self.city_name)
 
 
 def example_data():
-    user = User(id=1, first_name="Gordon", last_name="Ramsay", email="gramsay@gmail.com", password="123")
-    business = Business(id=1, name="Good Eats", location="123 Nowhere St., FakeCity, FakeState FakeZipcode", rating=4.5, review_count=1010, url="http://www.afakeurllink.com")
+    user = User(id=1, user_id=1234, first_name="Gordon", last_name="Ramsay", email="gramsay@gmail.com", password="123")
+    user2 = User(id=2, user_id=4321, first_name="Joe", last_name="B", email="j@gmail.com", password="123")
+    user3 = User(id=3, user_id=9876, first_name="Katie", last_name="Pep", email="kpep@gmail.com", password="123")
+    phone = Phone(id=1234, phone="1234567890", code="1234")
+    phone2 = Phone(id=4321, phone="0987654321", code="5678")
+    phone3 = Phone(id=9876, code="2468")
+    business = Business(id=1, name="Good Eats", location="123 Nowhere St., FakeCity, FakeState FakeZipcode", rating=4.5, review_count=1010, url="http://www.afakeurllink.com", lat=-25, lng=131)
     category = Category(id=1, food_type="American")
-    event = Event(id=1, start_time="01/01/2016 01:00", end_time="01/01/2016 02:00", category_id=1, business_id=1, is_matched=False, user_id=1)
-    attendee = Attendee(user_id=1, event_id=1, is_owner=True)
+    event = Event(id=1, start_time="01/01/2016 01:00", end_time="01/01/2016 02:00", category_id=1, business_id=1, is_matched=False, user_id=1234)
+    attendee = Attendee(user_id=1234, event_id=1, is_owner=True)
+    attendee = Attendee(user_id=4321, event_id=1, is_owner=False)
     city = City(city_name="Paris")
 
-    db.session.add_all([user, event, attendee, business, category, city])
+    db.session.add_all([user, user2, user3, phone, phone2, phone3, event, attendee, business, category, city])
     db.session.commit()
 ################################################################################
 

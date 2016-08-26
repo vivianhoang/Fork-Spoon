@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 from server import app
 from model import db, example_data, connect_to_db
-from db_func_test import get_specific_event, get_specific_attendee, get_specific_user
+from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business #update_phone
 
 
 class FlaskTests(TestCase):
@@ -14,7 +14,7 @@ class FlaskTests(TestCase):
 
         with self.client as c:
             with c.session_transaction() as sess:
-                sess['user_id'] = 1
+                sess['user_id'] = 1234
 
     def test_homepage(self):
         result = self.client.get("/")
@@ -40,7 +40,7 @@ class FlaskDatabaseTests(TestCase):
 
         with self.client as c:
             with c.session_transaction() as sess:
-                sess['id'] = 1
+                sess['id'] = 1234
 
         # connect to test database
         connect_to_db(app, "postgresql:///testdb")
@@ -56,16 +56,26 @@ class FlaskDatabaseTests(TestCase):
 
     def test_signup_fail(self):
         result = self.client.post("/signup",
-                                  data={"first_name": "Gordon",
+                                  data={"user_id": 1234,
+                                        "phone_number": "1234567890",
+                                        "first_name": "Gordon",
                                         "last_name": "Ramsay",
                                         "email": "gramsay@gmail.com",
                                         "password": "123"},
                                   follow_redirects=True)
         self.assertIn("Oops, your email already exists", result.data)
 
+    def test_submit_phone(self):
+        result = self.client.post("/submit_phone",
+                                  data={"phone_number": 1234567890,
+                                        "user_id": 1234},
+                                  follow_redirects=True)
+        self.assertIn("That number is already taken", result.data)
+
     # def tests_signin(self):
     #     result = self.client.post("/signup",
-    #                               data={"id": 2,
+    #                               data={"id": 3,
+    #                                     "user_id": 7890,
     #                                     "first_name": "Horrible",
     #                                     "last_name": "Name",
     #                                     "email": "hname@gmail.com",
@@ -92,11 +102,18 @@ class FlaskDatabaseTests(TestCase):
         event = get_specific_event(business_id)
         self.assertEqual(event.id, 1)
 
-    def test_get_attendee(self):
-        user_id = 1
+    # def test_update_phone(self):
+    #     user_id = 9876
+    #     phone = "1234561234"
 
-        attendee = get_specific_attendee(user_id)
-        self.assertEqual(attendee[0].is_owner, True)
+    #     new_phone = update_phone(user_id, phone)
+    #     self.assertEqual(new_phone.phone, "1234561234")
+
+    # def test_get_attendee(self):
+    #     user_id = 1234
+
+    #     attendee = get_specific_attendee(user_id)
+    #     self.assertEqual(attendee[0].is_owner, True)
 
     def test_categories(self):
         result = self.client.get("/create_event",
@@ -113,11 +130,21 @@ class FlaskDatabaseTests(TestCase):
         self.assertIn("Paris", result.data)
 
     def test_profile(self):
-        result = self.client.get("profile/1", follow_redirects=True)
+        result = self.client.get("/profile/1234", follow_redirects=True)
 
-        self.assertIn("<p>USER\'S PROFILE!</p>", result.data)
+        self.assertIn("<em>(1000 characters max.)</em>", result.data)
 
-        ##### TEST CITY, CATEGORY, BUSINESS
+    def test_get_business(self):
+        url = "http://www.afakeurllink.com"
+
+        business = get_specific_business(url)
+        self.assertEqual(business.url, "http://www.afakeurllink.com")
+
+    def test_other_user(self):
+        result = self.client.get("/other_profile/4321", follow_redirects=True)
+
+        self.assertIn("Joe B", result.data)
+
 
     # def test_restaurant_query(self):
     #     result = self.client.post("/restaurant_query",
@@ -129,9 +156,9 @@ class FlaskDatabaseTests(TestCase):
 
     #     self.assertIn("<h6>*Don't forget to check business hours before hand!</h6>", result.data)
 
-    # def test_confirmation(self):
+    # # def test_confirmation(self):
     #     result = self.client.post("/confirmation",
-    #                               data={"date": "01/01/2016",
+    #                               data={"date": "01/01/2018",
     #                                     "start_time": "01:00",
     #                                     "end_time": "02:00"},
     #                               follow_redirects=True)  # how to check a POST with relationship walking?
@@ -141,7 +168,9 @@ class FlaskDatabaseTests(TestCase):
     def test_find_events(self):
         result = self.client.get("/find_events")
 
-        self.assertIn("<p>Oops! There are currently no events available :\'(</p>", result.data)
+        # all events were already matched, so none available
+
+        self.assertIn("<p>Oops! There are currently no events available :\'(</p>\n", result.data)
 
     def test_matched(self):
         result = self.client.post("/matched",
@@ -153,7 +182,7 @@ class FlaskDatabaseTests(TestCase):
     def test_upcoming_events(self):
         result = self.client.get("/upcoming_events")
 
-        self.assertIn("<p>You have no upcoming matched events :( </p>", result.data)
+        self.assertIn("Good Eats", result.data)
 
 
 if __name__ == "__main__":

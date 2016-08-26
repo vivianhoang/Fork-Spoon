@@ -7,13 +7,9 @@ from server import app
 def load_categories():
     """Load food categories into database.
 
-       >>> category = Category.query.filter_by(food_type="Dim Sum").first()
+       >>> load_categories()
 
-       >>> category
-       <Event id=21 food_type=Dim Sum>
-
-       >>> category.food_type
-       u'Dim Sum'
+       >>>
 
     """
 
@@ -37,13 +33,9 @@ def load_categories():
 def load_cities():
     """Load cities into database.
 
-       >>> city = City.query.filter_by(city_name="San Francisco").first()
+       >>> load_cities()
 
-       >>> city
-       <Event id=49 city=San Francisco>
-
-       >>> city.city_name
-       u'San Francisco'
+       >>>
 
     """
 

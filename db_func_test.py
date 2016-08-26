@@ -1,4 +1,4 @@
-from model import connect_to_db, db, User, Event, Attendee, Business, Category, City
+from model import connect_to_db, db, User, Phone, Event, Attendee, Business, Category, City
 
 
 def get_specific_event(business_id):
@@ -14,5 +14,18 @@ def get_specific_attendee(user_id):
 
 
 def get_specific_user(email):
+    """Query for user."""
 
     return User.query.filter_by(email=email).first()
+
+
+def get_specific_business(url):
+    """Query for business."""
+
+    return Business.query.filter_by(url=url).first()
+
+
+def update_phone(x, y):
+    """Adding a phone number to our database"""
+
+    return Phone.query.filter_by(id=x).update({"phone": y})

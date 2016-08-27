@@ -74,19 +74,19 @@ def generate_user_id():
        >>> random.seed(2)
 
        >>> generate_user_id()
-       80076625
+       8007662
 
        >>> generate_user_id()
-       4
+       5513
 
        >>> generate_user_id()
-       84420042
+       688
 
     """
     numbers = []
 
     # need to fix so all id's will be unique
-    for _ in range(random.randrange(9)):
+    for _ in range(random.randrange(8)):
         numbers.append(str(random.randrange(9)))
 
     joined_nums = "".join(numbers)
@@ -303,14 +303,21 @@ def complete_event():
         'sort': 0
     }
 
-    results = client.search(location, **params)
-
-    # NEED TO JSONIFY RESULTS
+    results = client.search(location, **params)  # LIVE YELP CALL
 
     # instantiating new businesses that we find.
     businesses = results.businesses
     category = Category.query.filter_by(food_type=term).first()
     category_id = category.id
+
+    business_name = []
+    business_lat = []
+    business_lng = []
+
+    for business in businesses:
+        business_name.append(business.name)
+        business_lat.append(business.location.coordinate.latitude)
+        business_lng.append(business.location.coordinate.longitude)
 
     for business in businesses:
         find_business = Business.query.filter_by(url=business.url, name=business.name).first()
@@ -325,7 +332,7 @@ def complete_event():
              "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30",
              "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"]
 
-    return render_template("restaurants.html", GOOGLE_KEY=GOOGLE_KEY, businesses=businesses, times=times, category_id=category_id)
+    return render_template("restaurants.html", GOOGLE_KEY=GOOGLE_KEY, businesses=businesses, times=times, category_id=category_id, business_name=business_name, business_lat=business_lat, business_lng=business_lng)
 
 
 @app.route("/confirmation", methods=["POST"])

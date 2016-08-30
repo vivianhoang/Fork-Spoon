@@ -57,12 +57,21 @@
         var businessNameList = {{business_name|tojson|safe}};
         var businessLat = {{business_lat|tojson|safe}};
         var businessLng = {{business_lng|tojson|safe}};
+        var businessRating = {{business_rating|tojson|safe}};
+        var businessReviews = {{business_reviews|tojson|safe}}
+        var businessUrl = {{business_url|tojson|safe}};
+        var businessAddress = {{business_address|tojson|safe}};
+
 
         // Creates business info object in one gigantic object
         businessNameList.forEach((businessName, index) => {
         businessInfo[businessName] = {
             lat: businessLat[index],
             lng: businessLng[index],
+            rating: businessRating[index],
+            reviews: businessReviews[index],
+            url: businessUrl[index],
+            address: businessAddress[index],
         }
         });
 
@@ -75,29 +84,44 @@
                 // center: myLatLng
             });
             var bounds = new google.maps.LatLngBounds();
-            Object.keys(businessInfo).forEach((businessName) => {
+            Object.keys(businessInfo).forEach((businessName, index) => {
 
-                var contentString = "<div>" + businessName + "</div>"
+                var contentString = "<div>" + "<h2>" + businessName + "</h2>" + "</div>" + 
+                    "<div></div>" + 
+                    "<div>" + "<strong>Rating: </strong>" + businessInfo[businessName].rating + "</div>" +
+                    "<div>" + "<strong>Reviews: </strong>" + businessInfo[businessName].reviews + "</div>" +
+                    "<div>" + "<strong>Address: </strong>" + businessInfo[businessName].address + "</div>" +
+                    "<div>" + "<a href =" + businessInfo[businessName].url + "><strong>See More On Yelp!</strong></a></div>"
 
                 var infoWindow = new google.maps.InfoWindow({
                   content: contentString
                 });
+                var latitude = businessInfo[businessName].lat;
+                var longitude = businessInfo[businessName].lng;
 
                 infoWindows[businessName] = infoWindow;
+                bounds.extend(new google.maps.LatLng(latitude, longitude));
 
-                var marker = new google.maps.Marker({
-                    position: {lat: businessInfo[businessName].lat, lng: businessInfo[businessName].lng},
-                    map: map,
-                    title: businessName,
-                  });
-                bounds.extend(marker.getPosition());
+                setTimeout(function() {
+                    var marker = new google.maps.Marker({
+                        position: {lat: latitude, lng: longitude},
+                        map: map,
+                        animation: google.maps.Animation.DROP,
+                        title: businessName,
 
-                marker.addListener('click', function() {
-                    Object.keys(infoWindows).forEach((businessName) => {
-                        infoWindows[businessName].close();
+                        label: {
+                          text: index.toString(),
+                          labelClass: "labels"
+                        }
                     });
-                    infoWindow.open(map, marker);
-                });
+
+                    marker.addListener('click', function() {
+                        Object.keys(infoWindows).forEach((businessName) => {
+                            infoWindows[businessName].close();
+                        });
+                        infoWindow.open(map, marker);
+                    });
+                }, 100 * index);
             });
             map.fitBounds(bounds);
         }

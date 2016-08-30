@@ -1,7 +1,6 @@
 body {
     width: 100%;
     height: 100%;
-    background-image: url("Chicken_Wings.jpg");
 }
 
 html {
@@ -10,6 +9,16 @@ html {
 }
 
 #map {
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 80%;
+}
+
+.labels {
+  color: white;
+  background-color: red;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  font-size: 10px;
+  text-align: center;
+  width: 30px;
+  white-space: nowrap;
 }

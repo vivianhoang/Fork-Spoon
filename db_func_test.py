@@ -29,3 +29,8 @@ def update_phone(x, y):
     """Adding a phone number to our database"""
 
     return Phone.query.filter_by(id=x).update({"phone": y})
+
+
+def _mock_yelp_API_call(location, params):
+
+    return "Good Eats"

@@ -2,7 +2,8 @@ import unittest
 from unittest import TestCase
 from server import app
 from model import db, example_data, connect_to_db
-from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business #update_phone
+from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business, _mock_yelp_API_call #update_phone
+import server
 
 
 class FlaskTests(TestCase):
@@ -31,7 +32,7 @@ class FlaskDatabaseTests(TestCase):
         """Flask tests that use the database.."""
 
         # gets the Flask test client
-        self.client = app.test_client()
+        self.client = server.app.test_client()
 
         # show Flask errors that happen during the tests
         app.config['TESTING'] = True
@@ -47,6 +48,12 @@ class FlaskDatabaseTests(TestCase):
 
         db.create_all()
         example_data()
+
+        def _mock_yelp_API_call(location, params):
+
+            return "Good Eats"
+
+        server.yelp_API_call = _mock_yelp_API_call
 
     def tearDown(self):
         """Stuff to do after each test."""
@@ -145,16 +152,16 @@ class FlaskDatabaseTests(TestCase):
 
         self.assertIn("Joe B", result.data)
 
+    def test_restaurant_query(self):
 
-    # def test_restaurant_query(self):
-    #     result = self.client.post("/restaurant_query",
-    #                               data={"city": "Paris",
-    #                                     "zipcode": "",
-    #                                     "term": "American",
-    #                                     "radius_filter": 3},
-    #                               follow_redirects=True)
+        result = self.client.post("/restaurant_query",
+                                  data={"city": "Paris",
+                                        "zipcode": "",
+                                        "term": "American",
+                                        "radius_filter": 3},
+                                  follow_redirects=True)
 
-    #     self.assertIn("<h6>*Don't forget to check business hours before hand!</h6>", result.data)
+        self.assertIn("Home", result.data)
 
     # # def test_confirmation(self):
     #     result = self.client.post("/confirmation",

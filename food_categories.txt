@@ -5,7 +5,6 @@ Bubble Tea (bubbletea, [AU, BE, CL, CZ, DE, DK, FI, FR, GB, HK, IE, JP, MY, NO, 
 Coffee (coffee, All)
 Desserts (desserts, All)
 Donuts (donuts, [AR, AT, AU, BE, BR, CA, CH, CL, CZ, DE, DK, FI, FR, GB, HK, IE, IT, JP, MX, MY, NL, NO, NZ, PH, PL, PT, SE, SG, TR, TW, US])
-Food Trucks (foodtrucks, [AR, AT, AU, BE, BR, CA, CH, CL, CZ, DE, DK, ES, FI, FR, GB, HK, IE, IT, JP, MX, MY, NL, NO, NZ, PH, PL, PT, SE, TR, TW, US])
 Ice Cream & Frozen Yogurt (icecream, All)
 Tea (tea, All)
 Bars (bars, All)
@@ -66,3 +65,4 @@ Vegetarian (vegetarian, All)
 Vietnamese (vietnamese, All)
 Waffles (waffles, All)
 Ramen
+Korean

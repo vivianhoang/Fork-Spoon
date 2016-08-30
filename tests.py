@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 from server import app
 from model import db, example_data, connect_to_db
-from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business, _mock_yelp_API_call #update_phone
+from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business, _mock_yelp_API_call
 import server
 
 
@@ -51,9 +51,170 @@ class FlaskDatabaseTests(TestCase):
 
         def _mock_yelp_API_call(location, params):
 
-            return "Good Eats"
+            results = {
+                        "region": {
+                            "span": {
+                                "latitude_delta": 0.0,
+                                "longitude_delta": 0.0
+                            },
+                            "center": {
+                                "latitude": 48.856614,
+                                "longitude": 2.3522219
+                            }
+                        },
+                        "total": 3,
+                        "businesses": [
+                            {
+                                "is_claimed": False,
+                                "rating": 2.5,
+                                "mobile_url": "http://m.yelp.com/biz/quick-paris-20?adjust_creative=DhkXE_EgW2WTJ7X-20so4Q&utm_campaign=yelp_api&utm_medium=api_v2_search&utm_source=DhkXE_EgW2WTJ7X-20so4Q",
+                                "rating_img_url": "https://s3-media4.fl.yelpcdn.com/assets/2/www/img/c7fb9aff59f9/ico/stars/v1/stars_2_half.png",
+                                "review_count": 6,
+                                "name": "Quick",
+                                "rating_img_url_small": "https://s3-media4.fl.yelpcdn.com/assets/2/www/img/8e8633e5f8f0/ico/stars/v1/stars_small_2_half.png",
+                                "url": "http://www.yelp.com/biz/quick-paris-20?adjust_creative=DhkXE_EgW2WTJ7X-20so4Q&utm_campaign=yelp_api&utm_medium=api_v2_search&utm_source=DhkXE_EgW2WTJ7X-20so4Q",
+                                "categories": [
+                                    [
+                                        "Fast Food",
+                                        "hotdogs"
+                                    ],
+                                    [
+                                        "American (Traditional)",
+                                        "tradamerican"
+                                    ]
+                                ],
+                                "phone": "+33147737654",
+                                "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/hP_yeWopMWGBcIuAXfWFAg/ms.jpg",
+                                "location": {
+                                    "city": "Paris",
+                                    "display_address": [
+                                        "2 Le Parvis de la Défense",
+                                        "Centre Commercial les 4 temps",
+                                        "4ème",
+                                        "92800 Paris",
+                                        "France"
+                                    ],
+                                    "geo_accuracy": 9.5,
+                                    "neighborhoods": [
+                                        "4ème",
+                                        "Marais"
+                                    ],
+                                    "postal_code": "92800",
+                                    "country_code": "FR",
+                                    "address": [
+                                        "2 Le Parvis de la Défense",
+                                        "Centre Commercial les 4 temps"
+                                    ],
+                                    "coordinate": {
+                                        "latitude": 48.856614,
+                                        "longitude": 2.3522219
+                                    },
+                                    "state_code": "75"
+                                },
+                                "display_phone": "+33 1 47 73 76 54",
+                                "rating_img_url_large": "https://s3-media2.fl.yelpcdn.com/assets/2/www/img/d63e3add9901/ico/stars/v1/stars_large_2_half.png",
+                                "id": "quick-paris-20",
+                                "is_closed": False
+                            },
+                            {
+                                "is_claimed": False,
+                                "rating": 2.5,
+                                "mobile_url": "http://m.yelp.com/biz/mac-donalds-paris-4?adjust_creative=DhkXE_EgW2WTJ7X-20so4Q&utm_campaign=yelp_api&utm_medium=api_v2_search&utm_source=DhkXE_EgW2WTJ7X-20so4Q",
+                                "rating_img_url": "https://s3-media4.fl.yelpcdn.com/assets/2/www/img/c7fb9aff59f9/ico/stars/v1/stars_2_half.png",
+                                "review_count": 3,
+                                "name": "Mac donald's",
+                                "rating_img_url_small": "https://s3-media4.fl.yelpcdn.com/assets/2/www/img/8e8633e5f8f0/ico/stars/v1/stars_small_2_half.png",
+                                "url": "http://www.yelp.com/biz/mac-donalds-paris-4?adjust_creative=DhkXE_EgW2WTJ7X-20so4Q&utm_campaign=yelp_api&utm_medium=api_v2_search&utm_source=DhkXE_EgW2WTJ7X-20so4Q",
+                                "categories": [
+                                    [
+                                        "American (Traditional)",
+                                        "tradamerican"
+                                    ]
+                                ],
+                                "phone": "+33147730853",
+                                "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/KXcCa8a-aA-qsaOPfjFCyg/ms.jpg",
+                                "location": {
+                                    "city": "Paris",
+                                    "display_address": [
+                                        "Centre Commercial les 4 temps",
+                                        "4ème",
+                                        "Paris",
+                                        "France"
+                                    ],
+                                    "geo_accuracy": 9.5,
+                                    "neighborhoods": [
+                                        "4ème",
+                                        "Marais"
+                                    ],
+                                    "country_code": "FR",
+                                    "address": [
+                                        "Centre Commercial les 4 temps"
+                                    ],
+                                    "coordinate": {
+                                        "latitude": 48.856614,
+                                        "longitude": 2.3522219
+                                    },
+                                    "state_code": "75"
+                                },
+                                "display_phone": "+33 1 47 73 08 53",
+                                "rating_img_url_large": "https://s3-media2.fl.yelpcdn.com/assets/2/www/img/d63e3add9901/ico/stars/v1/stars_large_2_half.png",
+                                "id": "mac-donalds-paris-4",
+                                "is_closed": False
+                            },
+                            {
+                                "is_claimed": True,
+                                "rating": 3.5,
+                                "mobile_url": "http://m.yelp.com/biz/le-camion-qui-fume-paris?adjust_creative=DhkXE_EgW2WTJ7X-20so4Q&utm_campaign=yelp_api&utm_medium=api_v2_search&utm_source=DhkXE_EgW2WTJ7X-20so4Q",
+                                "rating_img_url": "https://s3-media1.fl.yelpcdn.com/assets/2/www/img/5ef3eb3cb162/ico/stars/v1/stars_3_half.png",
+                                "review_count": 156,
+                                "name": "Le Camion Qui Fume",
+                                "rating_img_url_small": "https://s3-media1.fl.yelpcdn.com/assets/2/www/img/2e909d5d3536/ico/stars/v1/stars_small_3_half.png",
+                                "url": "http://www.yelp.com/biz/le-camion-qui-fume-paris?adjust_creative=DhkXE_EgW2WTJ7X-20so4Q&utm_campaign=yelp_api&utm_medium=api_v2_search&utm_source=DhkXE_EgW2WTJ7X-20so4Q",
+                                "categories": [
+                                    [
+                                        "Burgers",
+                                        "burgers"
+                                    ],
+                                    [
+                                        "Food Trucks",
+                                        "foodtrucks"
+                                    ]
+                                ],
+                                "phone": "+33184163375",
+                                "snippet_text": "The best Food Truck for Burgers in Paris? I don´t know about that. But damn good Burgers anyway. I liked the Fries too. \n\nPrices are still ok in my book,...",
+                                "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/ORecsIAdABLO7oo0kbuuLQ/ms.jpg",
+                                "snippet_image_url": "http://s3-media3.fl.yelpcdn.com/photo/7YAKLzYkPqyKwJvSu_cVMg/ms.jpg",
+                                "display_phone": "+33 1 84 16 33 75",
+                                "rating_img_url_large": "https://s3-media3.fl.yelpcdn.com/assets/2/www/img/bd9b7a815d1b/ico/stars/v1/stars_large_3_half.png",
+                                "id": "le-camion-qui-fume-paris",
+                                "is_closed": False,
+                                "location": {
+                                    "city": "Paris",
+                                    "display_address": [
+                                        "4ème",
+                                        "Paris",
+                                        "France"
+                                    ],
+                                    "geo_accuracy": 5.0,
+                                    "neighborhoods": [
+                                        "4ème",
+                                        "Marais"
+                                    ],
+                                    "country_code": "FR",
+                                    "address": [],
+                                    "coordinate": {
+                                        "latitude": 48.87351,
+                                        "longitude": 2.35853
+                                    },
+                                    "state_code": "75"
+                                }
+                            }
+                        ]
+                    }
 
-        server.yelp_API_call = _mock_yelp_API_call
+            return results
+
+        # server.yelp_API_call = _mock_yelp_API_call
 
     def tearDown(self):
         """Stuff to do after each test."""
@@ -109,13 +270,6 @@ class FlaskDatabaseTests(TestCase):
         event = get_specific_event(business_id)
         self.assertEqual(event.id, 1)
 
-    # def test_update_phone(self):
-    #     user_id = 9876
-    #     phone = "1234561234"
-
-    #     new_phone = update_phone(user_id, phone)
-    #     self.assertEqual(new_phone.phone, "1234561234")
-
     # def test_get_attendee(self):
     #     user_id = 1234
 
@@ -153,24 +307,24 @@ class FlaskDatabaseTests(TestCase):
         self.assertIn("Joe B", result.data)
 
     def test_restaurant_query(self):
-
         result = self.client.post("/restaurant_query",
                                   data={"city": "Paris",
                                         "zipcode": "",
                                         "term": "American",
-                                        "radius_filter": 3},
-                                  follow_redirects=True)
-
+                                        "distance": 0.000621371},
+                                    )
         self.assertIn("Home", result.data)
 
-    # # def test_confirmation(self):
-    #     result = self.client.post("/confirmation",
-    #                               data={"date": "01/01/2018",
-    #                                     "start_time": "01:00",
-    #                                     "end_time": "02:00"},
-    #                               follow_redirects=True)  # how to check a POST with relationship walking?
+    # def test_confirmation(self):
+        result = self.client.post("/confirmation",
+                                  data={"date": "01/01/2018",
+                                        "start_time": "01:00",
+                                        "end_time": "02:00",
+                                        "business_url": "http://www.afakeurllink.com",
+                                        "category_id": 1},
+                                  )  # how to check a POST with relationship walking?
 
-    #     self.assertIn("Thanks for creating an event", result.data)
+        self.assertIn("Thanks for creating an event", result.data)
 
     def test_find_events(self):
         result = self.client.get("/find_events")
@@ -190,6 +344,13 @@ class FlaskDatabaseTests(TestCase):
         result = self.client.get("/upcoming_events")
 
         self.assertIn("Good Eats", result.data)
+
+    def test_profile_edit(self):
+        result = self.client.post("/profile-edit",
+                                  data={"description": "Hello World"}
+                                )
+
+        self.assertIn("You have successfully updated your profile.", result.data)
 
 
 if __name__ == "__main__":

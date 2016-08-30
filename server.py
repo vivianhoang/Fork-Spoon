@@ -9,7 +9,7 @@ from twilio.rest import TwilioRestClient
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
 from model import connect_to_db, db, User, Event, Attendee, Business, Category, City, Phone
-from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business, update_phone
+from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business
 from pytz import timezone
 import random
 from flask import jsonify

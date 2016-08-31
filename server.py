@@ -178,7 +178,7 @@ def submit_phone():
 
         twilio_client.messages.create(
             to=full_phone,
-            from_='+16506514651',
+            from_='+14152134256',
             body='Your verification code is ' + verification_code + ".",
         )
 
@@ -236,7 +236,7 @@ def signup_processed():
                         password=password)
 
         # used in test to update phone number
-        update_phone(user_id, phone_number)
+        Phone.query.filter_by(id=user_id).update({"phone": phone_number})
 
     #when I instantiatiate the ID, I need to refer to the id from the phone number table
 
@@ -461,6 +461,24 @@ def matched_event():
 
     db.session.add(attendee)
     db.session.commit()
+
+
+    two_attendees = Attendee.query.filter_by(event_id=event_id).all()
+
+    phone_numbers = []
+
+    for attendee in two_attendees:
+        phone_numbers.append(attendee.phone.phone)
+
+    for phone_number in phone_numbers:
+
+        full_phone = '+1' + phone_number
+
+        twilio_client.messages.create(
+            to=full_phone,
+            from_='+14152134256',
+            body="You have a new meal plan! Check out your upcoming events to see who your match is.",
+        )
 
     flash("You have a new meal plan!")
 

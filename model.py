@@ -51,8 +51,8 @@ class Phone(db.Model):
         """Provides helpful representation when printed."""
 
         return "<Phone id=%s phone=%s code=%s>" % (self.id,
-                                                  self.phone,
-                                                  self.code)
+                                                   self.phone,
+                                                   self.code)
 
 
 class Event(db.Model):

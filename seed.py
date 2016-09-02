@@ -61,9 +61,9 @@ def load_cities():
     print "Cities loaded"
 
 
-# if __name__ == "__main__":
-    # connect_to_db(app)
-#     db.create_all()
+if __name__ == "__main__":
+    connect_to_db(app)
+    db.create_all()
 
-# load_categories()
-# load_cities()
+load_categories()
+load_cities()

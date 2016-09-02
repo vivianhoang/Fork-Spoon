@@ -12,9 +12,7 @@ from model import connect_to_db, db, User, Event, Attendee, Business, Category, 
 from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business
 from pytz import timezone
 import random
-from flask import jsonify
 import os
-import oauth2
 
 # Authenticating TWILIO
 ACCOUNT_SID = os.environ['TWILIO_SID']
@@ -35,7 +33,7 @@ auth = Oauth1Authenticator(
 client = Client(auth)
 
 app = Flask(__name__)
-app.secret_key = "ABC"  # change this
+app.secret_key = "ABC123"  # For demo only.
 
 # Used so that if there is an error with our Jinja variables that we've made, it will raise an error
 app.jinja_env.undefined = StrictUndefined
@@ -138,7 +136,6 @@ def login_page():
 def login_processed():
     """Processes old users."""
 
-    # checking to see if the user exists through email. If so, set a session cookie.
     email = request.form["email"]
     password = request.form["password"]
 
@@ -159,12 +156,14 @@ def login_processed():
 
 @app.route('/enter_phone')
 def enter_phone():
+    """Entering phone number page."""
 
     return render_template("enter_phone.html")
 
 
 @app.route('/submit_phone', methods=["POST"])
 def submit_phone():
+    """Sending verification code if phone number is new."""
 
     verification_code = generate_verification_code()
     phone_number = request.form["phone_number"]
@@ -195,6 +194,7 @@ def submit_phone():
 
 @app.route('/submit_confirmation_code', methods=["POST"])
 def verification():
+    """Verifying code from user before proceeding to sign up page."""
 
     user_id = request.form['user_id']
     phone_number = request.form['phone_number']
@@ -204,7 +204,6 @@ def verification():
     submitted_verification_code = request.form["verification_code"]
 
     if phone_verification_code == submitted_verification_code:
-        # go to sign up page
         return render_template("signup.html", user_id=user_id, phone_number=phone_number)
     else:
         flash("Invalid code.")
@@ -237,8 +236,6 @@ def signup_processed():
 
         # used in test to update phone number
         Phone.query.filter_by(id=user_id).update({"phone": phone_number})
-
-    #when I instantiatiate the ID, I need to refer to the id from the phone number table
 
     db.session.add(new_user)
     db.session.commit()
@@ -329,7 +326,7 @@ def complete_event():
              "19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30"]
 
     ##########################
-    # Cannot jsonify in a separate route, so preparing for immediate use
+    # Cannot jsonify in a separate route for Google Maps, so preparing to pass the data to the html template and jsonifying it in Javascript
 
     business_name = []
     business_lat = []
@@ -362,7 +359,6 @@ def event_confirmed():
     end_time = request.form['end_time']
     date_start_time = date + " " + start_time
     date_end_time = date + " " + end_time
-
     start_datetime = datetime.strptime(date_start_time, "%m/%d/%Y %H:%M")
     end_datetime = datetime.strptime(date_end_time, "%m/%d/%Y %H:%M")
 
@@ -373,6 +369,7 @@ def event_confirmed():
     category_id = request.form['category_id']
     business_id = business.id
 
+    # grabbing the current user info to instantiate our event.
     user = User.query.filter_by(user_id=session['id']).first()
     event = Event(start_time=start_datetime, end_time=end_datetime, category_id=category_id, business_id=business_id, user_id=user.user_id)
 
@@ -382,7 +379,7 @@ def event_confirmed():
     event = get_specific_event(business_id)
     event_id = event.id
 
-    # instantiating the attendee page so that it shows the creater is the owner/is attending. If there is a match, we can query through it and two rows will show up via event_id. If not, only one attendee will appear.
+    # instantiating an attendee row so that it shows the creater is the owner/is attending. If there is a match, we can query through it later and two rows will show up by filtering the specific event_id. If not, only one attendee will appear and show the event is not matched.
     attendee = Attendee(user_id=user.user_id, event_id=event_id, is_owner=True)
 
     db.session.add(attendee)
@@ -438,7 +435,7 @@ def available_events():
 
     user = User.query.filter_by(user_id=session['id']).first()
 
-    # The past is less than the present/now, so we want to show all events where the future is greater than the present/now
+    # The past is 'less' than the present, and we want to show all future (greater) events.
     events = Event.query.filter(Event.is_matched == False, Event.user_id != user.user_id, Event.end_time > time_now).all()
 
     return render_template("find_events.html", events=events)
@@ -461,11 +458,12 @@ def matched_event():
     db.session.add(attendee)
     db.session.commit()
 
-
+    # should grab only two rows.
     two_attendees = Attendee.query.filter_by(event_id=event_id).all()
 
     phone_numbers = []
 
+    # grabbing phone numbers from the users that are attending the specific event.
     for attendee in two_attendees:
         phone_numbers.append(attendee.phone.phone)
 
@@ -487,8 +485,6 @@ def matched_event():
 @app.route("/other_profile/<int:id>", methods=['GET'])
 def other_profile(id):
     """Displays other user's profile"""
-
-    # need to figure out how to display anyone's page if I look for specific ID
 
     user = User.query.filter_by(user_id=id).first()
     return render_template("other_user_profile.html", user=user)

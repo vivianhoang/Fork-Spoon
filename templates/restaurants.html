@@ -9,11 +9,7 @@
         <div>
             <label>
                     {% for business in businesses%}
-                        <input type="radio" name="business_url" value="{{business.url}}" required><a href="{{business.url}}">{{business.name}}</a> -  Ratings: {{business.rating}}  || Reviews: {{business.review_count}}  ||  {{', '.join(business.location.display_address)}}<br>
-                        {# <input type="hidden" name ="business_name" value="{{business.name}}">
-                        <input type="hidden" name ="business_rating" value="{{business.rating}}">
-                        <input type="hidden" name ="business_location" value="{{', '.join(business.location.display_address)}}">
-                        <input type="hidden" name ="business_review_count" value="{{business.review_count}}"> #}
+                        <input type="radio" name="business_url" value="{{business.url}}" required>{{loop.index}}. {{business.name}}<br>
                     {% endfor %}
             </label>
         </div>
@@ -108,11 +104,9 @@
                         map: map,
                         animation: google.maps.Animation.DROP,
                         title: businessName,
-                        size: new google.maps.Size(71, 71),
 
                         label: {
-                          text: [index + 1].toString(),
-                          labelClass: "labels"
+                          text: [index + 1].toString()
                         }
                     });
 

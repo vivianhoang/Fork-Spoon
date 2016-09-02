@@ -1,4 +1,3 @@
-(All)
 Bagels (bagels, [AR, AT, BE, BR, CA, CH, CL, CZ, DE, DK, FI, FR, GB, HK, IE, IT, JP, MX, MY, NL, NO, NZ, PH, PL, PT, SE, SG, TR, TW, US])
 Bakeries (bakeries, All)
 Bubble Tea (bubbletea, [AU, BE, CL, CZ, DE, DK, FI, FR, GB, HK, IE, JP, MY, NO, PH, PL, SE, SG, TW, US])
@@ -65,4 +64,3 @@ Vegetarian (vegetarian, All)
 Vietnamese (vietnamese, All)
 Waffles (waffles, All)
 Ramen
-Korean

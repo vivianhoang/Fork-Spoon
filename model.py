@@ -174,7 +174,7 @@ def example_data():
     user2 = User(id=2, user_id=4321, first_name="Joe", last_name="B", email="j@gmail.com", password="123")
     user3 = User(id=3, user_id=9876, first_name="Katie", last_name="Pep", email="kpep@gmail.com", password="123")
     phone = Phone(id=1234, phone="1234567890", code="1234")
-    phone2 = Phone(id=4321, phone="0987654321", code="5678")
+    phone2 = Phone(id=4321, phone="1111111111", code="5678")
     phone3 = Phone(id=9876, code="2468")
     business = Business(name="Good Eats", location="123 Nowhere St., FakeCity, FakeState FakeZipcode", rating=4.5, review_count=1010, url="http://www.afakeurllink.com", lat=-25, lng=131)
     category = Category(food_type="American")

@@ -246,7 +246,7 @@ def signup_processed():
     session['id'] = new_user.user_id
     user = get_specific_user(email)
 
-    flash("Welcome to Food Adventures, %s. You have successfully logged in." % user.first_name)
+    flash("Welcome to Fork&Spoon, %s. You have successfully logged in." % user.first_name)
     return render_template("welcomepage.html")
 
 
@@ -254,7 +254,6 @@ def signup_processed():
 def logout():
     """Logs user out"""
 
-    # Log out and remove session cookie.
     session.clear()
 
     flash("You have successfully logged out.")

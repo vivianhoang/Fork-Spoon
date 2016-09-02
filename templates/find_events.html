@@ -1,8 +1,6 @@
 {% extends 'base.html'%}
 {% block content %}
 
-<p>This is my event page with all available events that haven't been matched with someone yet. Use submit button or create radio buttons for each. Instantiate Attendees and change "is matched" in Event to True</p>
-
     <form action="/matched", method="POST">
         <div>
             <label>
@@ -14,6 +12,7 @@
                 {% endif %}
             </label>
         </div>
+        <br></br>
         <div>
             {% if events %}
                 <input type="submit" value="I want to join this event!">

@@ -104,10 +104,7 @@
                         map: map,
                         animation: google.maps.Animation.DROP,
                         title: businessName,
-
-                        label: {
-                          text: [index + 1].toString()
-                        }
+                        icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + (index + 1) + '|ed6a63|000000'
                     });
 
                     marker.addListener('click', function() {

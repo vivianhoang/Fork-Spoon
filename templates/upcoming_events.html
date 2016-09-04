@@ -12,7 +12,7 @@
 
     <br></br>
 
-<h3>Upcoming Events</h3>
+<h3>Future Events</h3>
     {% if other_persons %}
         {% for other_person in other_persons%}
             <li><a href='{{other_person.event.business.url}}'>{{other_person.event.business.name}}</a> | {{other_person.event.start_time.strftime("%b %d, %Y")}} from {{other_person.event.start_time.strftime("%H:%M")}} - {{other_person.event.end_time.strftime("%H:%M")}} | <a href="/other_profile/{{other_person.user_id}}">View Your Match!</a></li>

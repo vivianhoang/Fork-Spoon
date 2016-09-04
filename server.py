@@ -3,16 +3,16 @@
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session
 #from flask_debugtoolbar import DebugToolbarExtension
-from datetime import datetime
+import os
 from google_key import GOOGLE_KEY
 from twilio.rest import TwilioRestClient
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
 from model import connect_to_db, db, User, Event, Attendee, Business, Category, City, Phone
-from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business
+from datetime import datetime
 from pytz import timezone
+from db_func_test import get_specific_event, get_specific_attendee, get_specific_user, get_specific_business
 import random
-import os
 
 # Authenticating TWILIO
 ACCOUNT_SID = os.environ['TWILIO_SID']
@@ -44,16 +44,8 @@ def generate_verification_code():
 
        >>> import random
 
-       >>> random.seed(1)
-
-       >>> generate_verification_code()
-       '1762'
-
-       >>> generate_verification_code()
-       '4457'
-
-       >>> generate_verification_code()
-       '0073'
+       >>> len(generate_verification_code()) == 4
+       True
 
     """
     numbers = []
@@ -69,23 +61,15 @@ def generate_user_id():
 
        >>> import random
 
-       >>> random.seed(2)
-
-       >>> generate_user_id()
-       8007662
-
-       >>> generate_user_id()
-       5513
-
-       >>> generate_user_id()
-       688
+       >>> str(generate_user_id()).isdigit()
+       True
 
     """
     numbers = []
 
     # need to fix so all id's will be unique
-    for _ in range(random.randrange(8)):
-        numbers.append(str(random.randrange(9)))
+    for _ in range(9):
+        numbers.append(str(random.randrange(8)+1))
 
     joined_nums = "".join(numbers)
     return int(joined_nums)

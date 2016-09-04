@@ -1,3 +1,7 @@
+/*class = .
+id = #*/
+
+
 body {
     width: 100%;
     height: 100%;
@@ -6,6 +10,45 @@ body {
 html {
     width: 100%;
     height: 100%;
+}
+
+body a {
+  font-size: 24px;
+}
+
+h3 {
+  margin-top: 0;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+.sidenav {
+    background-color:#000000;
+    width:200px;
+    height:100%;
+    float:left;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.sidenav li a:hover {
+    background-color: #0000FF;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+li a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
 }
 
 #map {

@@ -15,8 +15,10 @@ function updateProfile(evt) {
 
     // can't use .val() because textarea doesn't have that attribute
     var formInputs = {
-        "description": $("#profile-bio").val()
+        "description": $(".profile-bio").val()
     };
+
+    console.log(formInputs);
 
     $.post("/profile-edit",
         formInputs,

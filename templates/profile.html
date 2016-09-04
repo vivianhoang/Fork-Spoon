@@ -1,40 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
 
+
 <style>
 
-textarea { 
-    font-size: 16px;
-    font-family: Verdana;
-    font-style: italic;
-}
+    textarea { 
+        font-size: 16px;
+        font-family: Verdana;
+        font-style: italic;
+    }
 
-em {
-    font-size: 11px;
-}
+    em {
+        font-size: 11px;
+    }
 
-#chars {
-    font-size: 11px;
-}
+    #chars {
+        font-size: 11px;
+    }
 
 </style>
 
-
 <h3>{{user.first_name}} {{user.last_name}} </h3>
-
-<p>USER'S PROFILE!</p>
 
 <div class="label">Profile: <em>(1000 characters max.)</em></div>
 <form id="profile-description" action="/profile-edit" method="POST">
 
     {% if user.description %}
         <div>
-            <textarea id="profile-bio" name="profile-bio" rows="20" cols="50">{{user.description}}</textarea>
+            <textarea class="profile-bio" name="profile-bio" rows="20" cols="50">{{user.description}}</textarea>
         </div>
 
     {% else %}
         <div>
-            <textarea id="profile-bio" name="profile-bio" rows="20" cols="50" placeholder="Enter your profile here..."></textarea>
+            <textarea class="profile-bio" name="profile-bio" rows="20" cols="50" placeholder="Enter your profile here..."></textarea>
         </div>
     {% endif %}
 

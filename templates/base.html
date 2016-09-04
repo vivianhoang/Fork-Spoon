@@ -3,7 +3,8 @@
 <head>
     <title>Fork&Spoon</title>
 
-    <link rel="stylesheet" type="text/css" href="static/css/stylesheet.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
@@ -12,21 +13,19 @@
 
 <body>
 
-Fork&Spoon |
-
-{% if "id" in session %}
-    <a href="/">Home</a> |
-    <a href="/profile/{{ session['id'] }}">Your Profile</a> |
-    <a href="/create_event">Create Events</a> |
-    <a href="/find_events">Find Events</a> |
-    <a href="/upcoming_events">Upcoming Events</a> |
-    <a href="/logout">Logout</a>
+<div id="mySidenav" class="sidenav">
+    {% if "id" in session %}
+        <li><a href="/">Fork&Spoon</a></li>
+        <li><a href="/profile/{{ session['id'] }}">Your Profile</a></li>
+        <li><a href="/create_event">Create Events</a></li>
+        <li><a href="/find_events">Find Events</a></li>
+        <li><a href="/upcoming_events">Your Events</a></li>
+        <li><a href="/logout">Logout</a>
     {% else %}
-        <a href="/login">Login</a> |
-        <a href="/enter_phone">Sign Up</a>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/enter_phone">Sign Up</a></li>
     {% endif %}
-
-<hr>
+</div>
 
 {% for flash in get_flashed_messages() %}
     {{ flash }}

@@ -40,7 +40,7 @@ Fork&Spoon uses Google Maps and Yelp so users can quickly find and select nearby
 
 ### Testing Coverage
 
-**Types of Tests: **Doctests, Unittests, Integration Testing of Flask
+**Types of Tests: ** Doctests, Unittests, Integration Testing of Flask
 
 <img src="/static/css/coverage.png" height="350">
 

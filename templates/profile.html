@@ -8,39 +8,54 @@
         font-size: 16px;
         font-family: Verdana;
         font-style: italic;
+        background: transparent;
     }
 
-    em {
+    .label {
         font-size: 11px;
+        color: black;
     }
 
     #chars {
         font-size: 11px;
     }
 
+    #old-fashioned {
+        background: url(/static/css/old-fashioned2.jpg);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        height: 100%;
+        width: 100%;
+    }
+
 </style>
 
-<h3>{{user.first_name}} {{user.last_name}} </h3>
+    <div id="old-fashioned" style="padding-left:230px; padding-top:20px;">
+        <h3>{{user.first_name}} {{user.last_name}} </h3>
 
-<div class="label">Profile: <em>(1000 characters max.)</em></div>
-<form id="profile-description" action="/profile-edit" method="POST">
+        <div class="label">Profile: <em>(1000 characters max.)</em></div>
+        <form id="profile-description" action="/profile-edit" method="POST">
 
-    {% if user.description %}
-        <div>
-            <textarea class="profile-bio" name="profile-bio" rows="20" cols="50">{{user.description}}</textarea>
-        </div>
+            {% if user.description %}
+                <div>
+                    <textarea class="profile-bio" name="profile-bio" rows="18" cols="45">{{user.description}}</textarea>
+                </div>
 
-    {% else %}
-        <div>
-            <textarea class="profile-bio" name="profile-bio" rows="20" cols="50" placeholder="Enter your profile here..."></textarea>
-        </div>
-    {% endif %}
+            {% else %}
+                <div>
+                    <textarea class="profile-bio" name="profile-bio" rows="18" cols="45" placeholder="Enter your profile here..."></textarea>
+                </div>
+            {% endif %}
 
-    <div>
-        <input type="submit" value="Update my profile!"> &nbsp <span id="chars"></span>
+            <div>
+                <input type="submit" value="Update my profile!"> &nbsp <span id="chars"></span>
+            </div>
+
+        </form>
+    <script src="/static/js/edit-profile.js"></script>
     </div>
-
-</form>
-
-<script src="/static/js/edit-profile.js"></script>
 {% endblock %}

@@ -13,47 +13,102 @@ html {
 }
 
 body a {
-  font-size: 24px;
+    font-size: 24px;
 }
 
 h3 {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 h1 {
-  margin-top: 0;
+    margin-top: 0;
+    text-align: center;
+    color: black;
+}
+
+a {
+  color:black;
+  font-style: italic;
 }
 
 .sidenav {
-    background-color:#000000;
-    width:200px;
-    height:100%;
-    float:left;
+    background: rgba(255,255,255,1);
+    width: 250px;
+    height: 100%;
     margin: 0;
+    position: relative;
     padding: 0;
     list-style-type: none;
+    white-space: nowrap;
+    float: left;
 }
 
-.sidenav li a:hover {
-    background-color: #0000FF;
-    color: white;
-    padding: 8px 16px;
+.sidenav li {
+    float: left;
+}
+
+.sidenav li:hover {
+    background-color: #FFFFFF;
     text-decoration: none;
 }
 
-li a.active {
-    background-color: #4CAF50;
-    color: white;
+/*.container {
+    position: relative;
+    width: calc(100%-500px);
+    height: 100%;
+    float: left;
+}*/
+
+.welcome-row {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 30%;
+    text-align: center;
 }
 
-li a:hover:not(.active) {
-    background-color: #555;
-    color: white;
-}
-
-#map {
+.welcome-row img{
     width: 80%;
-    height: 80%;
+    height: auto;
+
+}
+
+.welcome-row img:hover {
+    opacity: 0.7;
+}
+
+.welcome-row-session {
+    width: 100%;
+    height: 25%;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.welcome-row-session img{
+    width: 50%;
+    height: auto;
+
+}
+
+.welcome-row-session img:hover {
+    opacity: 0.7;
+}
+
+.top-buffer {
+    margin-top:20px;
+}
+
+.left-col {
+    display: inline-block;
+}
+
+.right-col {
+    display: inline-block;
+    margin-left: 10%;
+}
+
+div.ui-datepicker{
+  font-size:10px;
 }
 
 .labels {

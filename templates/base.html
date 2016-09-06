@@ -8,32 +8,57 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    <style>
+        #outer-container {
+            height: 100%;
+            width: 100%;
+            background-color: transparent;
+        }
+
+        #my-nav {
+            height: 100%;
+            width: 200px;
+            background: rgba(255,255,255, 0.5);
+            float: left;
+            list-style-type: none;
+            padding-left: 10px;
+        }
+
+        #my-content {
+            height: 100%;
+            width: auto;
+            background-color: transparent;
+        }
+
+    </style>
 
 </head>
 
 <body>
 
-<div id="mySidenav" class="sidenav">
     {% if "id" in session %}
-        <li><a href="/">Fork&Spoon</a></li>
-        <li><a href="/profile/{{ session['id'] }}">Your Profile</a></li>
-        <li><a href="/create_event">Create Events</a></li>
-        <li><a href="/find_events">Find Events</a></li>
-        <li><a href="/upcoming_events">Your Events</a></li>
-        <li><a href="/logout">Logout</a>
-    {% else %}
-        <li><a href="/login">Login</a></li>
-        <li><a href="/enter_phone">Sign Up</a></li>
+    <div id="outer-container">
+        <div id="my-nav">
+            <h2 style="color:black;">Fork&Spoon</h2>
+            <br>
+            <li><a href="/profile/{{ session['id'] }}">Your Profile</a></li>
+            <li><a href="/create_event">Create Events</a></li>
+            <li><a href="/find_events">Find Events</a></li>
+            <li><a href="/upcoming_events">Your Events</a></li>
+            <li><a href="/logout">Logout</a>
+        </div>
+        <div id="my-content">
+            {% for flash in get_flashed_messages() %}
+                {{ flash }}
+            {% endfor %}
+
+            {% block content %}
+                <p>HOMEPAGE</p>
+            {% endblock %}
+        </div>
+    </div>
     {% endif %}
-</div>
 
-{% for flash in get_flashed_messages() %}
-    {{ flash }}
-{% endfor %}
-
-{% block content %}
-    <p>HOMEPAGE</p>
-{% endblock %}
 
 
 

@@ -1,45 +1,61 @@
 {% extends 'base.html'%}
 {% block content %}
 
-    <h1>Create Your Event</h1>
+<style>
+    #roe {
+        background: url(/static/css/latkes2.jpg);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        height: 100%;
+        width: 100%;
+    }
+</style>
 
-    <h3>1) Find a Place:</h3>
-    <form action="/restaurant_query" method="POST">
-        <div>    
-            <label>City:
-                <select name="city">
-                {% for city in cities %}
-                    <option value="{{city.city_name}}">{{ city.city_name }}</option>
-                {% endfor %}
-                </select>
-            </label>
-        </div>
-        <p>AND/OR</p>
-        <div>
-            <label>Zipcode: (Note: If your zipcode doesn't match your city, zipcode will have higher priority.)
-                <input type:"text" name="zipcode">
-            </label>
-        </div>
-        <br>
-        <div>
-            <label>Category:
-                <select name="term"> 
-                {% for category in categories %}
-                    <option value="{{category.food_type}}">{{ category.food_type }}</option>
-                {% endfor %}
-                </select>
-            </label>
-        </div>
-        <br>
-        <div>
-            <label>Distance (MAX. 25mi.):
-                <input type="number" min="0" max="25" name="distance" required>
-            </label>
-        </div>
-        <br>
-        <div>
-            <input type="submit" value="Search Places">
-        </div>
-    </form>
+    <div id="roe" style="padding-left:230px;">
+        <h1>Create Your Event</h1>
+
+        <h3>1) Find a Place:</h3>
+        <form action="/restaurant_query" method="POST">
+            <div>    
+                <label>City:
+                    <select name="city">
+                    {% for city in cities %}
+                        <option value="{{city.city_name}}">{{ city.city_name }}</option>
+                    {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <p>AND/OR</p>
+            <div>
+                <label>Zipcode:
+                    <input type:"text" name="zipcode">
+                </label>
+            </div>
+            <br>
+            <div>
+                <label>Category:
+                    <select name="term"> 
+                    {% for category in categories %}
+                        <option value="{{category.food_type}}">{{ category.food_type }}</option>
+                    {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <br>
+            <div>
+                <label>Distance (MAX. 25mi.):
+                    <input type="number" min="0" max="25" name="distance" required>
+                </label>
+            </div>
+            <br>
+            <div>
+                <input type="submit" value="Search Places">
+            </div>
+        </form>
+    </div>
 
 {% endblock %}

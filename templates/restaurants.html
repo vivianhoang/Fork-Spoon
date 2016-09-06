@@ -1,49 +1,71 @@
 {% extends 'base.html'%}
 {% block content %}
 
-    <h1>Create Your Event</h1>
+<style>
 
-    <h3>2) Choose a place, date, and time:</h3>
+    #california {
+        background: url(/static/css/california-cones2.jpg);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        height: 100%;
+        width: 100%;
+    }
 
-    <form action="/confirmation", method="POST">
-        <div>
-            <label>
-                    {% for business in businesses%}
-                        <input type="radio" name="business_url" value="{{business.url}}" required>{{loop.index}}. {{business.name}}<br>
-                    {% endfor %}
-            </label>
-        </div>
-        <div>
-            <h6>*Don't forget to check business hours before hand!</h6>
-            <label>Date:
-                <input type="text" name="date" id="date" required>
-            </label>
-        </div>
-        <br>
-        <div>
-            <label>Start Time:
-                <select name="start_time"> 
-                {% for time in times %}
-                    <option value={{ time }}>{{ time }}</option>
-                {% endfor %}
-                </select>
-            </label>
-            <label>End Time:
-                <select name="end_time"> 
-                {% for time in times %}
-                    <option value={{ time }}>{{ time }}</option>
-                {% endfor %}
-                </select>
-            </label>
-        </div>
-        <br>
-        <div>
-            <input type="hidden" name ="category_id" value="{{category_id}}">
-            <input type="submit" value="Create my event!">
-        </div>
-    </form>
+</style>
 
-    <div id="map" style="width: 100%; height: 100%"></div> 
+    <div id="california" style="padding-left:230px;">
+        <h1>Create Your Event</h1>
+
+        <h3>2) Choose a place, date, and time:</h3>
+        <h6>*Don't forget to check business hours before hand!</h6>
+
+            <form action="/confirmation", method="POST">
+                <div class="left-col">
+                    <label>
+                        {% for business in businesses%}
+                            <input type="radio" name="business_url" value="{{business.url}}" required>{{loop.index}}. {{business.name}}<br>
+                        {% endfor %}
+                    </label>
+                </div>
+                <div class="right-col">
+                    <div id="map" style="width: 250px; height: 250px"></div>
+                    <br>
+                    <div>
+                        <label>Date:
+                            <input type="text" name="date" id="date" required>
+                        </label>
+                    </div>
+                    <div>
+                        <label>Start Time:
+                            <select name="start_time"> 
+                            {% for time in times %}
+                                <option value={{ time }}>{{ time }}</option>
+                            {% endfor %}
+                            </select>
+                        </label>
+                    </div>
+                    <div>
+                        <label>End Time:
+                            <select name="end_time"> 
+                            {% for time in times %}
+                                <option value={{ time }}>{{ time }}</option>
+                            {% endfor %}
+                            </select>
+                        </label>
+                    </div>
+                <br>
+                <div>
+                    <input type="hidden" name ="category_id" value="{{category_id}}">
+                    <input type="submit" value="Create my event!">
+                </div>
+                </div>
+            </form>
+         
+    </div>
 
     <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_KEY}}&callback=initMap"
     async defer></script>
@@ -82,12 +104,12 @@
             var bounds = new google.maps.LatLngBounds();
             Object.keys(businessInfo).forEach((businessName, index) => {
 
-                var contentString = "<div>" + "<h2>" + businessName + "</h2>" + "</div>" + 
+                var contentString = "<div>" + "<h4>" + businessName + "</h4>" + "</div>" + 
                     "<div></div>" + 
                     "<div>" + "<strong>Rating: </strong>" + businessInfo[businessName].rating + "</div>" +
                     "<div>" + "<strong>Reviews: </strong>" + businessInfo[businessName].reviews + "</div>" +
                     "<div>" + "<strong>Address: </strong>" + businessInfo[businessName].address + "</div>" +
-                    "<div>" + "<a href =" + businessInfo[businessName].url + "><strong>See More On Yelp!</strong></a></div>"
+                    "<div>" + "<a href =" + businessInfo[businessName].url + " style='font-size:12px'><strong>See More On Yelp!</strong></a></div>"
 
                 var infoWindow = new google.maps.InfoWindow({
                   content: contentString
@@ -119,6 +141,7 @@
         }
     </script>
 
+    
     <script>
     $( function() {
       $( "#date" ).datepicker({minDate: 1});

@@ -1,36 +1,51 @@
 {% extends 'base.html'%}
 {% block content %}
 
-<h3>Currently Unmatched</h3>
-    {% if unmatched_events %}
-        {% for event in unmatched_events%}
-            <li><a href='{{event.business.url}}'>{{event.business.name}}</a> | {{event.start_time.strftime("%b %d, %Y")}} from {{event.start_time.strftime("%H:%M")}} - {{event.end_time.strftime("%H:%M")}} | {{event.phone.id}} (REMOVE ID)</li>
-        {% endfor %}
-    {% else %}
-        <p>You have no created events :'(</p>
-    {% endif %}
+<style>
+    #eggs {
+        background: url(/static/css/eggs2.jpg);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        height: 100%;
+        width: 100%;
+    }
+</style>
 
-    <br></br>
+    <div id="eggs" style="padding-left:230px; padding-top:20px;">
+        <h3>Currently Unmatched</h3>
+            {% if unmatched_events %}
+                {% for event in unmatched_events%}
+                    <li><a href='{{event.business.url}}'>{{event.business.name}}</a> | {{event.start_time.strftime("%b %d, %Y")}} from {{event.start_time.strftime("%H:%M")}} - {{event.end_time.strftime("%H:%M")}} | {{event.phone.id}} (REMOVE ID)</li>
+                {% endfor %}
+            {% else %}
+                <p>You have no created events :'(</p>
+            {% endif %}
 
-<h3>Future Events</h3>
-    {% if other_persons %}
-        {% for other_person in other_persons%}
-            <li><a href='{{other_person.event.business.url}}'>{{other_person.event.business.name}}</a> | {{other_person.event.start_time.strftime("%b %d, %Y")}} from {{other_person.event.start_time.strftime("%H:%M")}} - {{other_person.event.end_time.strftime("%H:%M")}} | <a href="/other_profile/{{other_person.user_id}}">View Your Match!</a></li>
-        {% endfor %}
-    {% else %}
-        <p>You have no upcoming matched events :( </p>
-    {% endif %}
-    <br>
+            <br></br>
 
-    <br></br>
+        <h3>Future Events</h3>
+            {% if other_persons %}
+                {% for other_person in other_persons%}
+                    <li><a href='{{other_person.event.business.url}}'>{{other_person.event.business.name}}</a> | {{other_person.event.start_time.strftime("%b %d, %Y")}} from {{other_person.event.start_time.strftime("%H:%M")}} - {{other_person.event.end_time.strftime("%H:%M")}} | <a href="/other_profile/{{other_person.user_id}}">View Your Match!</a></li>
+                {% endfor %}
+            {% else %}
+                <p>You have no upcoming matched events :( </p>
+            {% endif %}
+            <br>
 
-<h3>Previous Events</h3>
-    {% if previous_events %}
-        {% for previous_event in previous_events %}
-            <li><a href='{{previous_event.business.url}}'>{{previous_event.business.name}}</a> | {{previous_event.start_time.strftime("%b %d, %Y")}} from {{previous_event.start_time.strftime("%H:%M")}} - {{previous_event.end_time.strftime("%H:%M")}} | {{previous_event.phone.id}} (REMOVE ID)</li>
-        {% endfor %}
-    {% else %}
-        <p>You have no old events :(</p>
-    {% endif %}
+            <br></br>
 
+        <h3>Previous Events</h3>
+            {% if previous_events %}
+                {% for previous_event in previous_events %}
+                    <li><a href='{{previous_event.business.url}}'>{{previous_event.business.name}}</a> | {{previous_event.start_time.strftime("%b %d, %Y")}} from {{previous_event.start_time.strftime("%H:%M")}} - {{previous_event.end_time.strftime("%H:%M")}} | {{previous_event.phone.id}} (REMOVE ID)</li>
+                {% endfor %}
+            {% else %}
+                <p>You have no old events :(</p>
+            {% endif %}
+    </div>
 {% endblock %}

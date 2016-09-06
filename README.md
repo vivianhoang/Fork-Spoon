@@ -12,7 +12,9 @@ Fork&Spoon uses Google Maps and Yelp so users can quickly find and select nearby
 ### Technology Stack
 
 **Application:** Python, Flask, Jinja, SQLAlchemy, PostgreSQL, JavaScript
+
 **APIs:** Yelp, Google Map, Twilio 
+
 **Front-End**: HTML/CSS, Bootstrap, JQuery, AJAX    
 
 
@@ -20,27 +22,27 @@ Fork&Spoon uses Google Maps and Yelp so users can quickly find and select nearby
 
 **Searching For Businesses (User 1)**
 
-<img src="static/css/search_businesses.png">
+<img src="/static/css/search_businesses.png">
 
 **Search Results**
 
-<img src="static/css/search_results.png">
+<img src="/static/css/search_results.png">
 
 **Finding Events to Join (User 2)**
 
-<img src="static/css/find_events.png">
+<img src="/static/css/find_events.png">
 
 **Viewing New, Upcoming, and Previous Events**
 
-<img src="static/css/your_events.png">
+<img src="/static/css/your_events.png">
 
 
 
 ### Testing Coverage
 
-**Types of Test: s**Doctests, Unittests, Integration Testing of Flask
+**Types of Tests: **Doctests, Unittests, Integration Testing of Flask
 
-<img src="static/css/coverage.png" height="350">
+<img src="/static/css/coverage.png" height="350">
 
 
 ### Running Fork&Spoon Locally

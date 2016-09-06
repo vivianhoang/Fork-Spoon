@@ -1,8 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+    #avocado {
+        background: url(/static/css/avo-toast2.jpg);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        height: 100%;
+        width: 100%;
+    }
 
-<h3>{{user.first_name}} {{user.last_name}} </h3>
+    p {
+        font-size: 16px;
+        font-style: italic;
+    }
 
-<p>{{user.description}}</p>
+</style>
+
+    <div id="avocado" style="padding-left:230px; padding-top:20px;">
+        <h3>{{user.first_name}} {{user.last_name}} | {{user.phone.phone}} </h3>
+
+        <p>{{user.description}}</p>
+    </div>
 
 {% endblock %}

@@ -1,18 +1,43 @@
-{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fork&Spoon</title>
 
-    <h1>Enter verification code:</h1>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css">
 
-    <form action="/submit_confirmation_code", method="POST">
-        <div>
-            <label>Verification Code:
-                <input type="string" name="verification_code" minlength="4" maxlength="4" required>
-            </label>
-            <div> 
-                <input type="submit" value="Submit">
-                <input type="hidden" name="user_id" value="{{user_id}}">
-                <input type="hidden" name="phone_number" value="{{phone_number}}">
+</head>
+    <style>
+        #roll2 {
+            background: url(/static/css/ca-roll2.jpg);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            width: 100%;
+            height: 100%;
+            padding-left: 20px;
+            }
+        }
+    </style>
+<body>
+    <div id="roll2">
+
+        <h1>Enter verification code:</h1>
+
+        <form action="/submit_confirmation_code", method="POST">
+            <div>
+                <label>Verification Code:
+                    <input type="string" name="verification_code" minlength="4" maxlength="4" required>
+                </label>
+                <div> 
+                    <input type="submit" value="Submit">
+                    <input type="hidden" name="user_id" value="{{user_id}}">
+                    <input type="hidden" name="phone_number" value="{{phone_number}}">
+                </div>
             </div>
-        </div>
-    </form>
-
-{% endblock %}
+        </form>
+    </div>
+</body>

@@ -12,11 +12,16 @@ html {
     height: 100%;
 }
 
-body a {
-    font-size: 24px;
+#my-nav a {
+    font-size: 22px;
+    color: white;
 }
 
 h3 {
+    margin-top: 0;
+}
+
+h2 {
     margin-top: 0;
 }
 
@@ -26,9 +31,8 @@ h1 {
     color: black;
 }
 
-a {
+#my-content a {
   color:black;
-  font-style: italic;
 }
 
 .sidenav {

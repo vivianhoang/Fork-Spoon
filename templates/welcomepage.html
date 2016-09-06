@@ -11,8 +11,8 @@
 {% block content %}
     {% if "id" in session %}
         <style> 
-            body {
-            background: url(/static/css/california-cones2.jpg);
+            #totoro {
+            background: url(/static/css/totoro-pancakes2.jpg);
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;
@@ -20,53 +20,36 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             width: 100%;
-            height: auto;
+            height: 100%;
             }
         </style>
-        <h1>Fork&Spoon</h1>
-        <br></br>
-        <div class="welcome-row-session">
-            <div class="col-xs-12 col-md-4 col-lg-4">
-                <div>
-                    <br></br>
-                    <h3>Your Profile</h3>
-                    <a href="/profile/{{session['id']}}" class="profile"><img src="/static/css/Tacos.jpg" alt="Your Profile."/></a>
-                </div>
+        <div id="totoro">
+            <h1>Fork&Spoon</h1>
+            <br></br>
+            <div>
+                <br></br>
+                <a href="/profile/{{session['id']}}" class="profile">Your Profile</a>
             </div>
-            <div class="col-xs-12 col-md-4 col-lg-4">
-                <div>
-                    <br></br>
-                    <h3>Create Events</h3>
-                    <a href="/create_event" class="create_event"><img src="/static/css/Tacos.jpg" alt="Create Events"/></a>
-                </div>
+            <div>
+                <br></br>
+                <a href="/create_event" class="create_event">Create Events</a>
             </div>
-            <div class="col-xs-12 col-md-4 col-lg-4">
-                <div>
-                    <br></br>
-                    <h3>Find Events</h3>
-                    <a href="/find_events" class="find_events"><img src="/static/css/Tacos.jpg" alt="Find Events"/></a>
-                </div>
+            <div>
+                <br></br>
+                <a href="/find_events" class="find_events">Find Events</a>
             </div>
-        </div>
-        <div class="welcome-row-session">
-            <div class="col-xs-12 col-md-6 col-lg-offset-2 col-lg-4">
-                <div>
-                    <br></br>
-                    <h3>Your Events</h3>
-                    <a href="/upcoming_events" class="upcoming_events"><img src="/static/css/Tacos.jpg" alt="Your Events"/></a>
-                </div>
+            <div>
+                <br></br>
+                <a href="/upcoming_events" class="upcoming_events">Your Events</a>
             </div>
-            <div class="col-xs-12 col-md-6 col-lg-4">
-                <div>
-                    <br></br>
-                    <h3>Log Out</h3>
-                    <a href="/logout" class="logout"><img src="/static/css/Tacos.jpg" alt="Log Out"/></a>
-                </div>
-            </div>
+            <div>
+                <br></br>
+                <a href="/logout" class="logout">Log Out</a>
+            </div> 
         </div>
     {% else %}
         <style>
-            body {
+            #apple {
                 background: url(/static/css/Apple_Pie2.jpg);
                 -webkit-background-size: cover;
                 -moz-background-size: cover;
@@ -75,18 +58,16 @@
                 background-repeat: no-repeat;
                 background-attachment: fixed;
                 width: 100%;
-                height: auto;
+                height: 100%;
             }
         </style>
+        <div id="apple">
         <h1>Welcome to Fork&Spoon. Let's find your next adventure, together.</h1>
-        <div class="welcome-row">
-            <div class="col-xs-12 col-md-6 col-lg-6">
-                <h3>Login</h3>
-                <a href="/login" class="login"><img src="/static/css/Salad.jpg" alt="Log In"/></a>
+            <div>
+                <a href="/login" class="login">Log In</a>
             </div>
-            <div class="col-xs-12 col-md-6 col-lg-6">
-                <h3>Sign Up</h3>
-                <a href="/enter_phone" class="signup"><img src="/static/css/porkbelly_grits.jpg" alt="Sign Up"/></a>
+            <div>
+                <a href="/enter_phone" class="signup">Sign Up</a>
             </div>
         </div>
     {% endif %}

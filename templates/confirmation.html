@@ -1,7 +1,37 @@
 {% extends 'base.html'%}
 {% block content %}
 
-<p>Thanks for creating an event! Your event is set for {{event.start_time.strftime("%b %d, %Y")}} from {{event.start_time.strftime("%H:%M")}} - {{event.end_time.strftime("%H:%M")}} at {{event.business.name}}.</p>
+<style>
+
+    #candy {
+        background: url(/static/css/candy-affogato2.jpg);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        height: 100%;
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 0; 
+    }
+
+    #confirmation {
+        top: 50%;
+        position: relative;
+        transform: translateY(-50%);
+    }
+
+</style>
+
+    <div id="candy">
+        <div id="confirmation">
+            <h2>Thanks for creating an event! Your event is set for {{event.start_time.strftime("%b %d, %Y")}} from {{event.start_time.strftime("%H:%M")}} - {{event.end_time.strftime("%H:%M")}} at {{event.business.name}}.</h2>
+        </div>
+    </div>
 
 
 {% endblock %}

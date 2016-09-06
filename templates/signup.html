@@ -1,41 +1,65 @@
-{% extends 'base.html' %}
-{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fork&Spoon</title>
 
-    <h1>Sign Up</h1>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/css/stylesheet.css">
 
-    <form action="/signup" method="POST">
+</head>
+    <style>
+        #egg-roe {
+            background: url(/static/css/egg-roe2.jpg);
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            width: 100%;
+            height: 100%;
+            padding-left: 20px;
+            }
+        }
+    </style>
+<body>
+    <div id="egg-roe">
+        <h1>Sign Up</h1>
+
+        <form action="/signup" method="POST">
+            <div>
+                <label>First Name:
+                    <input type="text" name="first_name" required>
+                </label>
+            </div>
+
+            <div>
+                <label>Last Name:
+                    <input type="text" name="last_name" required>
+                </label>
+            </div>
+
+            <div>
+                <label>Email:
+                    <input type="text" name="email" required>
+                </label>
+            </div>
+
+            <div>
+                <label>Password:
+                    <input type="password" name="password" required>
+                </label>
+            </div>
+
+            <div> 
+                <input type="submit" value="Log In">
+                <input type="hidden" name="user_id" value="{{user_id}}">
+                <input type="hidden" name="phone_number" value="{{phone_number}}">
+            </div>
+        </form>
+        <br>
         <div>
-            <label>First Name:
-                <input type="text" name="first_name" required>
-            </label>
+            <p>*By signing up, you agree to give permission for users to contact you.</p>
         </div>
-
-        <div>
-            <label>Last Name:
-                <input type="text" name="last_name" required>
-            </label>
-        </div>
-
-        <div>
-            <label>Email:
-                <input type="text" name="email" required>
-            </label>
-        </div>
-
-        <div>
-            <label>Password:
-                <input type="password" name="password" required>
-            </label>
-        </div>
-
-        <div> 
-            <input type="submit" value="Log In">
-            <input type="hidden" name="user_id" value="{{user_id}}">
-            <input type="hidden" name="phone_number" value="{{phone_number}}">
-        </div>
-    </form>
-    <div>
-        <p>By signing up, you agree to give permission to other users to contact you.</p>
     </div>
-
-{% endblock %}
+</body>

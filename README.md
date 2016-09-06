@@ -100,4 +100,5 @@ In your browswer, go to lcalhost:5000/ to start using Fork&Spoon!
 
 ### About the Developer    
 Vivian Tse Hoang is a software engineer currently residing in the San Francisco Bay Area.
+
 [Email](mailto:viviantsehoang@gmail.com) | [Linkedin](https://www.linkedin.com/in/vivhoang) | [Twitter](http://twitter.com/imvivianhoang)        

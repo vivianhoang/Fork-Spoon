@@ -26,31 +26,31 @@
         <div id="totoro">
             <h1>Fork&Spoon</h1>
             <br></br>
-            <div>
+            <div class="tabs">
                 <br></br>
-                <a href="/profile/{{session['id']}}" class="profile">Your Profile</a>
+                <a href="/profile/{{session['id']}}" class="tabs-text">Profile</a>
             </div>
-            <div>
+            <div class="tabs">
                 <br></br>
-                <a href="/create_event" class="create_event">Create Events</a>
+                <a href="/create_event" class="tabs-text">Create Events</a>
             </div>
-            <div>
+            <div class="tabs">
                 <br></br>
-                <a href="/find_events" class="find_events">Find Events</a>
+                <a href="/find_events" class="tabs-text">Find Events</a>
             </div>
-            <div>
+            <div class="tabs">
                 <br></br>
-                <a href="/upcoming_events" class="upcoming_events">Your Events</a>
+                <a href="/upcoming_events" class="tabs-text">Your Events</a>
             </div>
-            <div>
+            <div class="tabs">
                 <br></br>
-                <a href="/logout" class="logout">Log Out</a>
+                <a href="/logout" class="tabs-text">Log Out</a>
             </div> 
         </div>
     {% else %}
         <style>
-            #apple {
-                background: url(/static/css/Apple_Pie2.jpg);
+            #tea-time {
+                background: url(/static/css/tea-time2.jpg);
                 -webkit-background-size: cover;
                 -moz-background-size: cover;
                 -o-background-size: cover;
@@ -61,14 +61,14 @@
                 height: 100%;
             }
         </style>
-        <div id="apple">
-        <h1>Welcome to Fork&Spoon. Let's find your next adventure, together.</h1>
-            <div>
-                <a href="/login" class="login">Log In</a>
-            </div>
-            <div>
-                <a href="/enter_phone" class="signup">Sign Up</a>
-            </div>
+        <div id="tea-time">
+            <h5 style="padding:25px; margin-top: 0;text-align:center;">Welcome to Fork&Spoon</h5>
+            <h1> Let's find your next adventure, together.</h1>
+            <a href="/login" class="login"><h3>Log In</h3></a>
+            <a href="/enter_phone" class="signup"><h3>Sign Up</h3></a>
+        </div>
+        <div>
+            <h6 style="text-align:center;">Photos by @iamafoodblog</h6>
         </div>
     {% endif %}
 

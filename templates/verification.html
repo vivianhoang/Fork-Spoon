@@ -8,7 +8,7 @@
 
 </head>
     <style>
-        #roll2 {
+        #roll {
             background: url(/static/css/ca-roll2.jpg);
             -webkit-background-size: cover;
             -moz-background-size: cover;
@@ -18,26 +18,35 @@
             background-attachment: fixed;
             width: 100%;
             height: 100%;
-            padding-left: 20px;
-            }
+            text-align: center;
+            position: relative;
+        }
+
+        #code-input-container {
+            border-bottom: 1px solid gray;
+            height: auto;
         }
     </style>
 <body>
-    <div id="roll2">
-
-        <h1>Enter verification code:</h1>
-
-        <form action="/submit_confirmation_code", method="POST">
-            <div>
-                <label>Verification Code:
-                    <input type="string" name="verification_code" minlength="4" maxlength="4" required>
-                </label>
-                <div> 
-                    <input type="submit" value="Submit">
-                    <input type="hidden" name="user_id" value="{{user_id}}">
-                    <input type="hidden" name="phone_number" value="{{phone_number}}">
-                </div>
+    <div id="roll">
+        <div id="roll-container">
+            <h1>Enter verification code:</h1>
+            <h4> </h4>
+            <div class="enter-phone">
+                <form action="/submit_confirmation_code", method="POST">
+                    <div>
+                        <div id="code-input-container">
+                            <input type="string" name="verification_code" minlength="4" maxlength="4" placeholder="Verification Code" required>
+                        </div>
+                        <div style="margin-top:30px;"> 
+                            <input type="submit" value="SUBMIT">
+                            <input type="hidden" name="user_id" value="{{user_id}}">
+                            <input type="hidden" name="phone_number" value="{{phone_number}}">
+                            <input type="submit" value="START OVER" onclick="window.location='/'">
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </body>

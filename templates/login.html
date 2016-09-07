@@ -26,23 +26,27 @@
     <div id="rolls">    
         <h1>Please Login</h1>
         <form action="/login" method="POST">
+            <div class="login-page">
+                <div>
+                    <h4>Email:</h4>
+                    <label>
+                        <input type="email" name="email" required>
+                    </label>
+                </div>
 
-            <div>
-                <label>Email:
-                    <input type="email" name="email" required>
-                </label>
+                <div>
+                    <h4>Password:</h4>
+                    <label>
+                        <input type="password" name="password" required>
+                    </label>
+                </div>
+                <div>  
+                    <input type="submit" value="Log In">
+                </div>
             </div>
-
-            <div>
-                <label>Password:
-                    <input type="password" name="password" required>
-                </label>
-            </div>
-
-            <div>  
-                <input type="submit" value="Log In">
-            </div>
-
         </form>
+        <div class="back">
+            <a href="/"><h2 style="color:black;">Go Back</h2></a>
+        </div>
     </div>
 </body>

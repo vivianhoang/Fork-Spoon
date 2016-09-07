@@ -5,6 +5,8 @@ id = #*/
 body {
     width: 100%;
     height: 100%;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
 }
 
 html {
@@ -15,6 +17,17 @@ html {
 #my-nav a {
     font-size: 22px;
     color: white;
+    padding-left: 10px;
+}
+
+#my-nav li {
+    margin-bottom:5px;
+    letter-spacing: 1px;
+}
+
+#my-nav a:hover {
+    color:black;
+    text-decoration: none;
 }
 
 h3 {
@@ -35,7 +48,140 @@ h1 {
   color:black;
 }
 
-.sidenav {
+.login {
+    width: 25%;
+    height: 40%;
+    border: solid white;
+    border-radius: 4px;
+    float: left;
+    margin-top: 10%;
+    text-align: center;
+    margin-left: 17%
+}
+
+.login:hover {
+    border: solid black;
+}
+
+.login h3 {
+    padding-top: 25%;
+    color: black;
+}
+
+.signup {
+    width: 25%;
+    height: 40%;
+    border: solid white;
+    border-radius: 2px;
+    float: left;
+    margin-top: 10%;
+    margin-left: 15%;
+    text-align: center;
+    display: inline-block;
+}
+
+.signup:hover {
+    border: solid black;
+    color: black;
+}
+
+.signup h3 {
+    padding-top: 25%;
+    color: black;
+}
+
+.login-page {
+    width: 300px;
+    height: 220px;
+    border: solid white;
+    border-radius: 3px;
+    margin: auto;
+    margin-top: 20%;
+    text-align: center;
+}
+
+.enter-phone {
+    width: 300px;
+    height: 130px;
+    margin: auto;
+    margin-top: 50px;
+    text-align: center;
+    background: transparent;
+}
+
+.back {
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 60px;
+    text-align: center;
+}
+
+.tabs {
+    width: 160px;
+    height: 200px;
+    border: solid black;
+    border-radius: 3px;
+    float: left;
+    display: inline-block;
+    margin-left: 7%;
+    margin-top: 10%;
+    text-align: center;
+}
+
+#home input[type=text] {
+    background:transparent;
+    width:275px;
+    height:50px;
+    font-weight: 400;
+    font-size: 25px;
+    text-align: center;
+    border: none;
+    color: black;
+}
+
+#home input:focus {
+    outline: none;
+}
+
+#home-container {
+    top:50%;
+    position:relative;
+    transform: translateY(-50%);
+}
+
+#roll input[type=string] {
+    background:transparent;
+    width:275px;
+    height:50px;
+    font-weight: 400;
+    font-size: 25px;
+    text-align: center;
+    border: none;
+    color: black;
+}
+
+#roll input:focus {
+    outline: none;
+}
+
+#roll-container {
+    top:50%;
+    position:relative;
+    transform: translateY(-50%);
+}
+
+input[type=submit] {
+    padding:5px 15px; 
+    background: rgba(0,0,0,0.5); 
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+    color:white;
+    font-weight: 300;
+}
+
+/*.sidenav {
     background: rgba(255,255,255,1);
     width: 250px;
     height: 100%;
@@ -45,23 +191,17 @@ h1 {
     list-style-type: none;
     white-space: nowrap;
     float: left;
-}
+}*/
 
-.sidenav li {
+/*.sidenav li {
     float: left;
 }
 
 .sidenav li:hover {
     background-color: #FFFFFF;
     text-decoration: none;
-}
-
-/*.container {
-    position: relative;
-    width: calc(100%-500px);
-    height: 100%;
-    float: left;
 }*/
+
 
 .welcome-row {
     width: 100%;

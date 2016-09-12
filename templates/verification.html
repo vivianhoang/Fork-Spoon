@@ -20,6 +20,8 @@
             height: 100%;
             text-align: center;
             position: relative;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 300;
         }
 
         #code-input-container {
@@ -36,7 +38,7 @@
                 <form action="/submit_confirmation_code", method="POST">
                     <div>
                         <div id="code-input-container">
-                            <input type="string" name="verification_code" minlength="4" maxlength="4" placeholder="Verification Code" required>
+                            <input type="string" name="verification_code" minlength="4" maxlength="4" placeholder="Verification Code" autocomplete="off" required>
                         </div>
                         <div style="margin-top:30px;"> 
                             <input type="submit" value="SUBMIT">

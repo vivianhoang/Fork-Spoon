@@ -147,6 +147,8 @@ h1 {
     top:50%;
     position:relative;
     transform: translateY(-50%);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
 }
 
 #roll input[type=string] {
@@ -168,6 +170,8 @@ h1 {
     top:50%;
     position:relative;
     transform: translateY(-50%);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 300;
 }
 
 input[type=submit] {
